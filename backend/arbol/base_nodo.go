@@ -1,7 +1,10 @@
 package arbol
 
-import "main/ambito"
+import (
+	"main/ambito"
+	"main/valor"
+)
 
 type BaseNodo interface {
-	Ejecutar(ambito *ambito.Ambito) interface{}
+	Ejecutar(ambito *ambito.Ambito) valor.Value
 }

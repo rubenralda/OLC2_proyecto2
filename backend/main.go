@@ -847,6 +847,7 @@ func main() {
 
 	mi_generador := generador.Generator{}
 	generador.Mi_generador = &mi_generador
+	generador.Mi_generador.MainCode = true
 	fichero, err := antlr.NewFileStream("prueba.swift")
 	if err != nil {
 		fmt.Println("No se pudo abrir el archivo")
@@ -863,5 +864,21 @@ func main() {
 	}
 	for _, local := range ambito_global.Locales {
 		fmt.Println(local)
+	}
+	generador.Mi_generador.GenerateFinalCode()
+	codigo_final := ""
+	for _, item := range generador.Mi_generador.GetFinalCode() {
+		codigo_final += item.(string)
+	}
+	archivoc, err := os.Create("salida.cpp")
+	if err != nil {
+		fmt.Println("No se pudo crear el archivo", err)
+		return
+	}
+	defer archivoc.Close()
+	_, err = archivoc.WriteString(codigo_final)
+	if err != nil {
+		fmt.Println("Error al escribir", err)
+		return
 	}
 }

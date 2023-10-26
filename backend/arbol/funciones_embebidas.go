@@ -3,7 +3,8 @@ package arbol
 import (
 	"fmt"
 	"main/ambito"
-	"strconv"
+	"main/generador"
+	"main/valor"
 )
 
 var Salid_programa string
@@ -12,92 +13,67 @@ type Funcion_print struct {
 	Lista_expresion []BaseNodo
 }
 
-func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) interface{} {
-	salida := ""
+func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+	var result valor.Value
 	for _, expresion := range i.Lista_expresion {
-		resultado := expresion.Ejecutar(ambito_padre)
-		switch rr := resultado.(type) {
-		case int:
-			salida += strconv.Itoa(rr) + " "
-		case float64:
-			salida += strconv.FormatFloat(rr, 'f', -1, 64) + " "
-		case string:
-			salida += rr + " "
-		case rune:
-			salida += string(rr) + " "
-		case bool:
-			salida += strconv.FormatBool(rr) + " "
-		case nil:
-			salida += "nil "
-		default:
-			salida += "######"
+		result = expresion.Ejecutar(ambito_padre)
+		if result.Type == valor.INTEGER || result.Type == valor.FLOAT || result.Type == valor.ARRAY {
+			generador.Mi_generador.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
+			generador.Mi_generador.AddPrintf("c", "10")
+			generador.Mi_generador.AddBr()
+		} else if result.Type == valor.BOOLEAN {
+			if result.IsTemp {
+				//cuando es variable
+			}
+			newLabel := generador.Mi_generador.NewLabel()
+			//add labels
+			for _, lvl := range result.TrueLabel {
+				generador.Mi_generador.AddLabel(lvl.(string))
+			}
+			generador.Mi_generador.AddPrintf("c", "(char)116")
+			generador.Mi_generador.AddPrintf("c", "(char)114")
+			generador.Mi_generador.AddPrintf("c", "(char)117")
+			generador.Mi_generador.AddPrintf("c", "(char)101")
+			generador.Mi_generador.AddGoto(newLabel)
+			//add labels
+			for _, lvl := range result.FalseLabel {
+				generador.Mi_generador.AddLabel(lvl.(string))
+			}
+			generador.Mi_generador.AddPrintf("c", "(char)102")
+			generador.Mi_generador.AddPrintf("c", "(char)97")
+			generador.Mi_generador.AddPrintf("c", "(char)108")
+			generador.Mi_generador.AddPrintf("c", "(char)115")
+			generador.Mi_generador.AddPrintf("c", "(char)101")
+			generador.Mi_generador.AddLabel(newLabel)
+			generador.Mi_generador.AddPrintf("c", "10")
+			generador.Mi_generador.AddBr()
+		} else if result.Type == valor.STRING {
+			// falta modificar esa logica de cuando es string
 		}
 	}
-	fmt.Println(salida)
-	salida += "\n"
-	Salid_programa += salida
-	return nil
+	return valor.Value{}
 }
 
 type Funcion_int struct {
 	Expresion BaseNodo
 }
 
-func (i Funcion_int) Ejecutar(ambito_padre *ambito.Ambito) interface{} {
-	resultado := i.Expresion.Ejecutar(ambito_padre)
-	switch rr := resultado.(type) {
-	case float64:
-		return int(rr)
-	case string:
-		numero, err := strconv.Atoi(rr)
-		if err != nil {
-			panic("No se puede convertir a valor numerico")
-			//return nil
-		}
-		return numero
-	default:
-		panic("No se puede convertir a valor numerico")
-		//return nil
-	}
+func (f Funcion_int) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+	return valor.Value{}
 }
 
 type Funcion_float struct {
 	Expresion BaseNodo
 }
 
-func (i Funcion_float) Ejecutar(ambito_padre *ambito.Ambito) interface{} {
-	resultado := i.Expresion.Ejecutar(ambito_padre)
-	switch rr := resultado.(type) {
-	case string:
-		numero, err := strconv.ParseFloat(rr, 64)
-		if err != nil {
-			panic("No se puede convertir a valor numerico")
-			//return nil
-		}
-		return numero
-	case int:
-		return float64(rr)
-	default:
-		panic("No se puede convertir a valor numerico")
-		//return nil
-	}
+func (f Funcion_float) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+	return valor.Value{}
 }
 
 type Funcion_string struct {
 	Expresion BaseNodo
 }
 
-func (i Funcion_string) Ejecutar(ambito_padre *ambito.Ambito) interface{} {
-	resultado := i.Expresion.Ejecutar(ambito_padre)
-	switch rr := resultado.(type) {
-	case int:
-		return strconv.Itoa(rr)
-	case float64:
-		return strconv.FormatFloat(rr, 'f', -1, 64)
-	case bool:
-		return strconv.FormatBool(rr)
-	default:
-		panic("No se puede convertir a valor numerico")
-		//return nil
-	}
+func (f Funcion_string) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+	return valor.Value{}
 }

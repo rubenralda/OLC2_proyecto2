@@ -53,9 +53,9 @@ func (p Primitivos) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	case valor.FLOAT:
 		result = valor.Value{Value: p.Valor, IsTemp: false, Type: p.Tipo}
 	case valor.CHAR:
-		//return []rune(p.Valor)[1] //convertir a un array de bytes para operar si es necesario
+		result = valor.Value{Value: p.Valor, IsTemp: false, Type: p.Tipo}
 	case valor.NULL:
-		//return nil
+		result = valor.Value{Value: "", IsTemp: false, Type: p.Tipo}
 	}
 	return result
 }

@@ -17,8 +17,8 @@ const (
 	FLOAT                        //1
 	STRING                       //2
 	BOOLEAN                      //3
-	NULL                         //4
-	ARRAY                        //5
-	STRUCT                       //6
-	CHAR
+	CHAR                         //4
+	NULL                         //5
+	ARRAY                        //6
+	STRUCT                       //7
 )
