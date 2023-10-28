@@ -25,14 +25,8 @@ type Declarar_funcion struct {
 	Mutable          bool
 }
 
-func (d Declarar_funcion) Ejecutar(ambito_padre *ambito.Ambito) interface{} {
-	funcion := Ejecutar_funcion(d)
-	mutable := false
-	if d.Mutable {
-		mutable = true
-	}
-	ambito_padre.AgregarIde(ambito.Identificadores{Id: d.Id, Primitivo: d.Tipo_retorno, Funcion: funcion, Tipo: "funcion", Referencia: mutable})
-	return nil
+func (d Declarar_funcion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+	return valor.Value{}
 }
 
 type Lista_parametros struct {

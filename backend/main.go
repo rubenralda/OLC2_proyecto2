@@ -106,13 +106,13 @@ func (v *parser_visitor) VisitDeclaracion(ctx *parser.DeclaracionContext) interf
 // METODOS PARA EXPRESION
 
 func (v *parser_visitor) VisitExpresion_id(ctx *parser.Expresion_idContext) interface{} {
-	ide := arbol.Id_expresion{Id: ctx.Identificador().GetText()}
-	return arbol.Expresion{Valor1: ide, Operacion: "identificador"}
+	//ide := arbol.Id_expresion{Id: ctx.Identificador().GetText()}
+	return arbol.Id_expresion{Id: ctx.Identificador().GetText()}
 }
 
 func (v *parser_visitor) VisitExpresion_vector(ctx *parser.Expresion_vectorContext) interface{} {
-	ide := arbol.Id_vector{Id: ctx.Identificador().GetText(), Indice: ctx.Expresion().Accept(v).(arbol.BaseNodo)}
-	return arbol.Expresion{Valor1: ide, Operacion: "vector"}
+	//ide := arbol.Id_vector{Id: ctx.Identificador().GetText(), Indice: ctx.Expresion().Accept(v).(arbol.BaseNodo)}
+	return arbol.Id_vector{Id: ctx.Identificador().GetText(), Indice: ctx.Expresion().Accept(v).(arbol.BaseNodo)}
 }
 
 func (v *parser_visitor) VisitExpresion_matriz(ctx *parser.Expresion_matrizContext) interface{} {
@@ -120,8 +120,8 @@ func (v *parser_visitor) VisitExpresion_matriz(ctx *parser.Expresion_matrizConte
 	for _, expresion := range ctx.AllExpresion() {
 		indices = append(indices, expresion.Accept(v).(arbol.BaseNodo))
 	}
-	ide := arbol.Id_matriz{Id: ctx.Identificador().GetText(), Indices: indices}
-	return arbol.Expresion{Valor1: ide, Operacion: "matriz"}
+	//ide := arbol.Id_matriz{Id: ctx.Identificador().GetText(), Indices: indices}
+	return arbol.Id_matriz{Id: ctx.Identificador().GetText(), Indices: indices}
 }
 
 func (v *parser_visitor) VisitExpresion_arit(ctx *parser.Expresion_aritContext) interface{} {
@@ -157,16 +157,16 @@ func (v *parser_visitor) VisitExpresion_rela(ctx *parser.Expresion_relaContext) 
 }
 
 func (v *parser_visitor) VisitExpresion_atributos(ctx *parser.Expresion_atributosContext) interface{} {
-	return arbol.Expresion{Valor1: ctx.Atributos().Accept(v).(arbol.BaseNodo), Operacion: "atributos"}
+	return ctx.Atributos().Accept(v)
 }
 
 func (v *parser_visitor) VisitExpresion_llamada(ctx *parser.Expresion_llamadaContext) interface{} {
-	return arbol.Expresion{Valor1: ctx.Llamadas_funciones().Accept(v).(arbol.BaseNodo), Operacion: "llamada"}
+	return ctx.Llamadas_funciones().Accept(v)
 }
 
 func (v *parser_visitor) VisitExpresion_struct_dupla(ctx *parser.Expresion_struct_duplaContext) interface{} {
-	dd := arbol.Declarar_objeto{Id: ctx.Identificador().GetText(), Dupla: ctx.L_duble().Accept(v).([]arbol.Dupla_atributos)}
-	return arbol.Expresion{Valor1: dd, Operacion: "objeto"}
+	//dd := arbol.Declarar_objeto{Id: ctx.Identificador().GetText(), Dupla: ctx.L_duble().Accept(v).([]arbol.Dupla_atributos)}
+	return arbol.Declarar_objeto{Id: ctx.Identificador().GetText(), Dupla: ctx.L_duble().Accept(v).([]arbol.Dupla_atributos)}
 }
 
 func (v *parser_visitor) VisitL_duble(ctx *parser.L_dubleContext) interface{} {
@@ -183,9 +183,9 @@ func (v *parser_visitor) VisitL_duble(ctx *parser.L_dubleContext) interface{} {
 // METODOS PARA VALOR PRIMITIVO
 
 func (v *parser_visitor) VisitValor_primitivo(ctx *parser.Valor_primitivoContext) interface{} {
-	aa := arbol.Expresion{Valor1: ctx.Primitivos().Accept(v).(arbol.BaseNodo), Operacion: "primitivo"}
+	//aa := arbol.Expresion{Valor1: ctx.Primitivos().Accept(v).(arbol.BaseNodo), Operacion: "primitivo"}
 	//fmt.Println(aa)
-	return aa
+	return ctx.Primitivos().Accept(v)
 }
 
 func (v *parser_visitor) VisitPrimitivo_int(ctx *parser.Primitivo_intContext) interface{} {
@@ -795,7 +795,7 @@ func handleVisitor(c *fiber.Ctx) error {
 	for _, linea := range resultado {
 		linea.Ejecutar(ambito_global)
 	}
-	for _, local := range ambito_global.Locales {
+	for _, local := range ambito_global.Variables {
 		fmt.Println(local)
 	}
 	response := Resp{
@@ -848,6 +848,7 @@ func main() {
 	mi_generador := generador.Generator{}
 	generador.Mi_generador = &mi_generador
 	generador.Mi_generador.MainCode = true
+	generador.Mi_generador.PrintStringFlag = true
 	fichero, err := antlr.NewFileStream("prueba.swift")
 	if err != nil {
 		fmt.Println("No se pudo abrir el archivo")
@@ -862,7 +863,7 @@ func main() {
 	for _, linea := range resultado {
 		linea.Ejecutar(ambito_global)
 	}
-	for _, local := range ambito_global.Locales {
+	for _, local := range ambito_global.Variables {
 		fmt.Println(local)
 	}
 	generador.Mi_generador.GenerateFinalCode()

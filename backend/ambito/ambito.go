@@ -1,57 +1,70 @@
 package ambito
 
+import "main/valor"
+
 type Objeto_struct struct {
 	Ambito_struct *Ambito
 }
 
 type Identificadores struct {
-	Id           string        // tambien nombre interno de una funcion
-	Primitivo    string        // String, Int, Bool, Float, char, (Nombre_struct)
-	Valor        interface{}   // 10, 20.5, "hola", true, objeto_strcut
-	Tipo         string        //variable, constante, vector, funcion, struct, matriz y parametro
+	Id                string              // tambien nombre interno de una funcion
+	Primitivo         valor.TipoExpresion // String, Int, Bool, Float, char, (Nombre_struct)
+	Posicion_relativa int                 // uso: p + posicion_relativa
+	//Tipo              TipoVariable        //variable, constante, vector, funcion, struct, matriz y parametro
+	Is_init bool // Si fue declarada con un valor o no
+
 	Objeto       Objeto_struct // el objeto para el tipo struct
 	Lista_vector []interface{} // array de datos para el tipo vector
 	// parte de funciones
 	Funcion       interface{}      // En realidad es arbol.Ejecutar_funcion pero recursividad indirecta de modulos
-	Referencia    bool             // true si es por referencia, tambien mutable o inmutable
+	Referencia    valor.Value      // true si es por referencia, tambien mutable o inmutable
 	Puntero_valor *Identificadores // tiene un objeto identificadores que puede modificar
+}
+
+type Variables struct {
+	Id                string              //nombre de la variable
+	Posicion_relativa int                 //uso: p + posicion_relativa
+	Tipo_dimension    valor.DIMENSION     //variable, vector, matriz
+	Tipo              valor.TipoExpresion //INT, FLOAT, STRING, BOOL, CHAR, NULL
+	Tipo_struct       string              //nombre tipo del struct (ID) solo si Is_init esta activada
+	Is_instancia      bool                //si es un objeto, se usa el tipo struct
+	Is_init           bool                //Si fue declarada con un valor o no
+}
+
+type Funciones struct {
 }
 
 type Ambito struct {
 	NombreAmbito string
 	Padre        *Ambito
 	AmbitosHijos []*Ambito
-	Locales      []*Identificadores
+	Variables    []*Variables
+	Funciones    []*Funciones
+	Size         int
 }
 
-func (a *Ambito) AgregarIde(ide Identificadores) bool {
-	a.Locales = append(a.Locales, &ide)
-	return true
+func (a *Ambito) AgregarVariable(variable Variables) {
+	a.Variables = append(a.Variables, &variable)
 }
 
-func (a *Ambito) AgregarHijo(ambito *Ambito) bool {
+func (a *Ambito) AgregarAmbito(ambito *Ambito) bool {
 	a.AmbitosHijos = append(a.AmbitosHijos, ambito)
 	return true
 }
 
-func (a *Ambito) BuscarID(id string) *Identificadores {
+func (a *Ambito) BuscarVariable(id string) *Variables {
 	anterior := a
-	var elemento *Identificadores
+	var elemento *Variables
 	for anterior != nil {
-		elemento = buscarElemento(anterior.Locales, id)
+		for _, value := range anterior.Variables {
+			if value.Id == id {
+				elemento = value
+			}
+		}
 		if elemento != nil {
 			break
 		}
 		anterior = anterior.Padre
 	}
 	return elemento
-}
-
-func buscarElemento(slice []*Identificadores, target string) *Identificadores {
-	for _, value := range slice {
-		if value.Id == target {
-			return value // El elemento se encontró en el slice
-		}
-	}
-	return nil // El elemento no se encontró en el slice
 }

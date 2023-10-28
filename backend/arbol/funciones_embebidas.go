@@ -5,6 +5,7 @@ import (
 	"main/ambito"
 	"main/generador"
 	"main/valor"
+	"strconv"
 )
 
 var Salid_programa string
@@ -17,13 +18,14 @@ func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
 	for _, expresion := range i.Lista_expresion {
 		result = expresion.Ejecutar(ambito_padre)
-		if result.Type == valor.INTEGER || result.Type == valor.FLOAT || result.Type == valor.ARRAY {
+		if result.Type == valor.INTEGER || result.Type == valor.FLOAT || result.Type == valor.CHAR {
 			generador.Mi_generador.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
-			generador.Mi_generador.AddPrintf("c", "10")
+			generador.Mi_generador.AddPrintf("c", "32")
 			generador.Mi_generador.AddBr()
 		} else if result.Type == valor.BOOLEAN {
 			if result.IsTemp {
-				//cuando es variable
+				//cuando es variable, si pasa?
+				panic("no se si pasa en funcion print, no implementado")
 			}
 			newLabel := generador.Mi_generador.NewLabel()
 			//add labels
@@ -45,12 +47,33 @@ func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 			generador.Mi_generador.AddPrintf("c", "(char)115")
 			generador.Mi_generador.AddPrintf("c", "(char)101")
 			generador.Mi_generador.AddLabel(newLabel)
-			generador.Mi_generador.AddPrintf("c", "10")
+			generador.Mi_generador.AddPrintf("c", "32")
 			generador.Mi_generador.AddBr()
 		} else if result.Type == valor.STRING {
-			// falta modificar esa logica de cuando es string
+			//llamar a generar printstring
+			generador.Mi_generador.GeneratePrintString()
+			//agregar codigo en el main
+			newTemp1 := generador.Mi_generador.NewTemp()
+			newTemp2 := generador.Mi_generador.NewTemp()
+			size := strconv.Itoa(ambito_padre.Size)
+			generador.Mi_generador.AddExpression(newTemp1, "P", size, "+")     //nuevo temporal en pos vacia
+			generador.Mi_generador.AddExpression(newTemp1, newTemp1, "1", "+") //se deja espacio de retorno
+			generador.Mi_generador.AddSetStack("(int)"+newTemp1, result.Value) //se coloca string en parametro que se manda
+			generador.Mi_generador.AddExpression("P", "P", size, "+")          // cambio de entorno
+			generador.Mi_generador.AddCall("dbrust_printString")               //Llamada
+			generador.Mi_generador.AddGetStack(newTemp2, "(int)P")             //obtencion retorno
+			generador.Mi_generador.AddExpression("P", "P", size, "-")          //regreso del entorno
+			generador.Mi_generador.AddPrintf("c", "32")                        //salto de linea
+			generador.Mi_generador.AddBr()
+		} else if result.Type == valor.NULL {
+			generador.Mi_generador.AddPrintf("c", "(char)110")
+			generador.Mi_generador.AddPrintf("c", "(char)105")
+			generador.Mi_generador.AddPrintf("c", "(char)108")
+			generador.Mi_generador.AddPrintf("c", "32") //espacio
+			generador.Mi_generador.AddBr()
 		}
 	}
+	generador.Mi_generador.AddPrintf("c", "10")
 	return valor.Value{}
 }
 

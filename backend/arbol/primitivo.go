@@ -37,7 +37,7 @@ func (p Primitivos) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		//iguala a heap pointer
 		generador.Mi_generador.AddAssign(newTemp, "H")
 		//recorremos string en ascii
-		myString := p.Valor
+		myString := p.Valor[1 : len(p.Valor)-1]
 		byteArray := []byte(myString)
 		for _, asc := range byteArray {
 			//se agrega ascii al heap
