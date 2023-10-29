@@ -14,9 +14,7 @@ type Value struct {
 	//			|
 	//			V
 	Referencia bool
-	IsTemp     bool //borrar
 	OutLabel   []interface{}
-	IntValue   int
 }
 
 type TipoExpresion int

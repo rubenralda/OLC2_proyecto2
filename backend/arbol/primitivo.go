@@ -16,9 +16,7 @@ func (p Primitivos) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	var result valor.Value
 	switch p.Tipo {
 	case valor.INTEGER:
-		result = valor.Value{Value: p.Valor, IsTemp: false, Type: p.Tipo}
-		num, _ := strconv.Atoi(p.Valor)
-		result.IntValue = num
+		result = valor.Value{Value: p.Valor, Type: p.Tipo}
 	case valor.BOOLEAN:
 		trueLabel := generador.Mi_generador.NewLabel()
 		falseLabel := generador.Mi_generador.NewLabel()
@@ -28,7 +26,7 @@ func (p Primitivos) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		} else {
 			generador.Mi_generador.AddGoto(falseLabel)
 		}
-		result = valor.Value{Value: "", IsTemp: false, Type: p.Tipo}
+		result = valor.Value{Type: p.Tipo}
 		result.TrueLabel = append(result.TrueLabel, trueLabel)
 		result.FalseLabel = append(result.FalseLabel, falseLabel)
 	case valor.STRING:
@@ -49,13 +47,13 @@ func (p Primitivos) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddSetHeap("(int)H", "-1")
 		generador.Mi_generador.AddExpression("H", "H", "1", "+")
 		generador.Mi_generador.AddBr()
-		result = valor.Value{Value: newTemp, IsTemp: true, Type: p.Tipo}
+		result = valor.Value{Value: newTemp, Type: p.Tipo}
 	case valor.FLOAT:
-		result = valor.Value{Value: p.Valor, IsTemp: false, Type: p.Tipo}
+		result = valor.Value{Value: p.Valor, Type: p.Tipo}
 	case valor.CHAR:
-		result = valor.Value{Value: p.Valor, IsTemp: false, Type: p.Tipo}
+		result = valor.Value{Value: p.Valor, Type: p.Tipo}
 	case valor.NULL:
-		result = valor.Value{Value: "", IsTemp: false, Type: p.Tipo}
+		result = valor.Value{Value: "", Type: p.Tipo}
 	}
 	return result
 }

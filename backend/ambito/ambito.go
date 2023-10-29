@@ -29,6 +29,7 @@ type Variables struct {
 	Tipo_struct       string              //nombre tipo del struct (ID) solo si Is_init esta activada
 	Is_instancia      bool                //si es un objeto, se usa el tipo struct
 	Is_init           bool                //Si fue declarada con un valor o no
+	Is_constante      bool                //Si fue declarada con let
 }
 
 type Funciones struct {
@@ -52,10 +53,11 @@ func (a *Ambito) AgregarAmbito(ambito *Ambito) bool {
 	return true
 }
 
-func (a *Ambito) BuscarVariable(id string) *Variables {
+func (a *Ambito) BuscarVariable(id string) (*Variables, int) {
 	anterior := a
 	var elemento *Variables
-	for anterior != nil {
+	size := 0
+	for {
 		for _, value := range anterior.Variables {
 			if value.Id == id {
 				elemento = value
@@ -65,6 +67,11 @@ func (a *Ambito) BuscarVariable(id string) *Variables {
 			break
 		}
 		anterior = anterior.Padre
+		if anterior != nil {
+			size += anterior.Size
+		} else {
+			break
+		}
 	}
-	return elemento
+	return elemento, size
 }

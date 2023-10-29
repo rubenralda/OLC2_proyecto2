@@ -23,10 +23,6 @@ func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 			generador.Mi_generador.AddPrintf("c", "32")
 			generador.Mi_generador.AddBr()
 		} else if result.Type == valor.BOOLEAN {
-			if result.IsTemp {
-				//cuando es variable, si pasa?
-				panic("no se si pasa en funcion print, no implementado")
-			}
 			newLabel := generador.Mi_generador.NewLabel()
 			//add labels
 			for _, lvl := range result.TrueLabel {

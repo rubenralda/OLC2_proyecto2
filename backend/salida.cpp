@@ -5,7 +5,7 @@ double heap[30101999];
 double stack[30101999];
 double P;
 double H;
-double t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43, t44, t45, t46, t47, t48, t49, t50, t51, t52, t53, t54, t55, t56, t57, t58, t59, t60, t61, t62, t63, t64, t65, t66, t67, t68, t69, t70, t71, t72, t73, t74, t75, t76, t77, t78, t79, t80, t81, t82, t83, t84, t85, t86, t87, t88, t89, t90, t91, t92, t93, t94, t95, t96, t97, t98, t99, t100, t101, t102, t103, t104, t105, t106, t107, t108, t109, t110, t111, t112, t113, t114, t115, t116, t117, t118, t119, t120, t121, t122, t123, t124, t125, t126, t127, t128, t129, t130, t131, t132, t133, t134, t135, t136, t137, t138, t139, t140, t141, t142, t143, t144, t145, t146, t147, t148, t149, t150, t151, t152, t153, t154, t155, t156, t157, t158;
+double t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43, t44, t45, t46, t47, t48, t49, t50, t51, t52, t53, t54, t55, t56, t57, t58, t59, t60, t61, t62, t63, t64, t65, t66, t67, t68, t69, t70, t71, t72, t73, t74, t75, t76, t77, t78, t79, t80, t81, t82, t83, t84, t85, t86, t87, t88, t89, t90, t91, t92, t93, t94, t95, t96, t97, t98, t99, t100, t101, t102, t103, t104, t105, t106, t107, t108, t109, t110, t111, t112, t113, t114, t115, t116, t117, t118, t119, t120, t121, t122, t123, t124, t125, t126, t127, t128, t129, t130, t131, t132, t133, t134, t135, t136, t137, t138, t139, t140, t141, t142, t143, t144, t145, t146, t147, t148, t149, t150, t151, t152, t153, t154, t155, t156, t157, t158, t159, t160, t161, t162, t163, t164, t165, t166, t167, t168, t169, t170, t171, t172, t173, t174, t175, t176, t177, t178, t179, t180, t181, t182, t183, t184, t185;
 
 /*------NATIVES------*/
 void dbrust_printString() {
@@ -259,26 +259,31 @@ int main() {
 	printf("%c", 10);
 	goto L3;
 	L2:
-	stack[0] = 1;
+	t15 = P + 0;
+	stack[(int)t15] = 1;
 	goto L4;
 	L3:
-	stack[0] = 0;
+	t15 = P + 0;
+	stack[(int)t15] = 0;
 	goto L4;
 	L4:
 	
-	//Llamando una variable
-	t17 = stack[0];
-	if(t17 == 1) goto L5;
+	t19 = P - 0;
+	t17 = t19 + 0;
+	t18 = stack[(int)t17];
+	if(t18 == 1) goto L5;
 	goto L6;
 	L6:
-	stack[1] = 1;
+	t16 = P + 1;
+	stack[(int)t16] = 1;
 	goto L7;
 	L5:
-	stack[1] = 0;
+	t16 = P + 1;
+	stack[(int)t16] = 0;
 	goto L7;
 	L7:
 	
-	t18 = H;
+	t21 = H;
 	heap[(int)H] = 105;
 	H = H + 1;
 	heap[(int)H] = 109;
@@ -298,9 +303,10 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	stack[2] = t18;
+	t20 = P + 2;
+	stack[(int)t20] = t21;
 	
-	t19 = H;
+	t23 = H;
 	heap[(int)H] = 99;
 	H = H + 1;
 	heap[(int)H] = 97;
@@ -330,64 +336,70 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	stack[3] = t19;
+	t22 = P + 3;
+	stack[(int)t22] = t23;
 	
-	t28 = 2 * 3;
-	t27 = 5 + t28;
-	t26 = 4 * t27;
-	t25 = 2 + t26;
-	t24 = 10 * t25;
-	t23 = 5 + t24;
-	t30 = 8 * 3;
-	t29 = t30 * 3;
-	t22 = t23 - t29;
-	t21 = 7 - t22;
-	t32 = 6 * 2;
-	t31 = 50 * t32;
-	t20 = t21 + t31;
-	stack[4] = t20;
+	t25 = 2 * 3;
+	t26 = 5 + t25;
+	t27 = 4 * t26;
+	t28 = 2 + t27;
+	t29 = 10 * t28;
+	t30 = 5 + t29;
+	t31 = 8 * 3;
+	t32 = t31 * 3;
+	t33 = t30 - t32;
+	t34 = 7 - t33;
+	t35 = 6 * 2;
+	t36 = 50 * t35;
+	t37 = t34 + t36;
+	t24 = P + 4;
+	stack[(int)t24] = t37;
 	
 	t39 = 2 * 2;
-	t38 = t39 * 2;
-	t37 = t38 * 2;
-	t36 = t37 - 9;
-	t42 = 8 - 6;
-	t47 = 3 * 3;
-	t48 = 6 * 5;
-	t46 = t47 - t48;
-	t45 = t46 - 7;
-	t51 = 7 * 7;
-	t50 = t51 * 7;
-	t49 = 9 + t50;
-	t44 = t45 - t49;
-	t43 = t44 + 10;
-	t41 = t42 + t43;
-	t40 = t41 - 5;
-	t35 = t36 - t40;
-	t34 = t35 + 8;
-	t54 = 2 * 3;
-	t53 = 5 * t54;
-	t52 = 6 - t53;
-	t33 = t34 - t52;
-	stack[5] = t33;
+	t40 = t39 * 2;
+	t41 = t40 * 2;
+	t42 = t41 - 9;
+	t43 = 8 - 6;
+	t44 = 3 * 3;
+	t45 = 6 * 5;
+	t46 = t44 - t45;
+	t47 = t46 - 7;
+	t48 = 7 * 7;
+	t49 = t48 * 7;
+	t50 = 9 + t49;
+	t51 = t47 - t50;
+	t52 = t51 + 10;
+	t53 = t43 + t52;
+	t54 = t53 - 5;
+	t55 = t42 - t54;
+	t56 = t55 + 8;
+	t57 = 2 * 3;
+	t58 = 5 * t57;
+	t59 = 6 - t58;
+	t60 = t56 - t59;
+	t38 = P + 5;
+	stack[(int)t38] = t60;
 	
-	//Llamando una variable
-	t58 = stack[4];
-	//Llamando una variable
-	t64 = stack[5];
-	t62 = t64 * 3;
-	t61 = 2 + t62;
-	t60 = t61 + 1;
-	t68 = 2 * 2;
-	t67 = t68 * 2;
-	t66 = t67 - 2;
-	t65 = t66 * 2;
-	t59 = t60 - t65;
-	t56 = t58 + t59;
-	t55 = t56 - 2;
-	stack[6] = t55;
+	t64 = P - 0;
+	t62 = t64 + 4;
+	t63 = stack[(int)t62];
+	t67 = P - 0;
+	t65 = t67 + 5;
+	t66 = stack[(int)t65];
+	t68 = t66 * 3;
+	t69 = 2 + t68;
+	t70 = t69 + 1;
+	t71 = 2 * 2;
+	t72 = t71 * 2;
+	t73 = t72 - 2;
+	t74 = t73 * 2;
+	t75 = t70 - t74;
+	t76 = t63 + t75;
+	t77 = t76 - 2;
+	t61 = P + 6;
+	stack[(int)t61] = t77;
 	
-	t69 = H;
+	t78 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -431,22 +443,23 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t70 = P + 7;
-	t70 = t70 + 1;
-	stack[(int)t70] = t69;
+	t79 = P + 7;
+	t79 = t79 + 1;
+	stack[(int)t79] = t78;
 	P = P + 7;
 	dbrust_printString();
-	t71 = stack[(int)P];
+	t80 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t73 = stack[4];
-	printf("%d", (int)t73);
+	t83 = P - 0;
+	t81 = t83 + 4;
+	t82 = stack[(int)t81];
+	printf("%d", (int)t82);
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t74 = H;
+	t84 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -490,22 +503,23 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t75 = P + 7;
-	t75 = t75 + 1;
-	stack[(int)t75] = t74;
+	t85 = P + 7;
+	t85 = t85 + 1;
+	stack[(int)t85] = t84;
 	P = P + 7;
 	dbrust_printString();
-	t76 = stack[(int)P];
+	t86 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t78 = stack[5];
-	printf("%d", (int)t78);
+	t89 = P - 0;
+	t87 = t89 + 5;
+	t88 = stack[(int)t87];
+	printf("%d", (int)t88);
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t79 = H;
+	t90 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -549,22 +563,23 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t80 = P + 7;
-	t80 = t80 + 1;
-	stack[(int)t80] = t79;
+	t91 = P + 7;
+	t91 = t91 + 1;
+	stack[(int)t91] = t90;
 	P = P + 7;
 	dbrust_printString();
-	t81 = stack[(int)P];
+	t92 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t83 = stack[6];
-	printf("%d", (int)t83);
+	t95 = P - 0;
+	t93 = t95 + 6;
+	t94 = stack[(int)t93];
+	printf("%d", (int)t94);
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t84 = H;
+	t96 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -634,22 +649,23 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t85 = P + 7;
-	t85 = t85 + 1;
-	stack[(int)t85] = t84;
+	t97 = P + 7;
+	t97 = t97 + 1;
+	stack[(int)t97] = t96;
 	P = P + 7;
 	dbrust_printString();
-	t86 = stack[(int)P];
+	t98 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t88 = stack[6];
-	printf("%d", (int)t88);
+	t101 = P - 0;
+	t99 = t101 + 6;
+	t100 = stack[(int)t99];
+	printf("%d", (int)t100);
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t89 = H;
+	t102 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -691,18 +707,19 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t90 = P + 7;
-	t90 = t90 + 1;
-	stack[(int)t90] = t89;
+	t103 = P + 7;
+	t103 = t103 + 1;
+	stack[(int)t103] = t102;
 	P = P + 7;
 	dbrust_printString();
-	t91 = stack[(int)P];
+	t104 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t93 = stack[0];
-	if(t93 == 1) goto L8;
+	t107 = P - 0;
+	t105 = t107 + 0;
+	t106 = stack[(int)t105];
+	if(t106 == 1) goto L8;
 	goto L9;
 	L8:
 	printf("%c", (char)116);
@@ -720,7 +737,7 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t94 = H;
+	t108 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -764,28 +781,29 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t95 = P + 7;
-	t95 = t95 + 1;
-	stack[(int)t95] = t94;
+	t109 = P + 7;
+	t109 = t109 + 1;
+	stack[(int)t109] = t108;
 	P = P + 7;
 	dbrust_printString();
-	t96 = stack[(int)P];
+	t110 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t98 = stack[2];
-	t99 = P + 7;
-	t99 = t99 + 1;
-	stack[(int)t99] = t98;
+	t113 = P - 0;
+	t111 = t113 + 2;
+	t112 = stack[(int)t111];
+	t114 = P + 7;
+	t114 = t114 + 1;
+	stack[(int)t114] = t112;
 	P = P + 7;
 	dbrust_printString();
-	t100 = stack[(int)P];
+	t115 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t101 = H;
+	t116 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -829,28 +847,29 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t102 = P + 7;
-	t102 = t102 + 1;
-	stack[(int)t102] = t101;
+	t117 = P + 7;
+	t117 = t117 + 1;
+	stack[(int)t117] = t116;
 	P = P + 7;
 	dbrust_printString();
-	t103 = stack[(int)P];
+	t118 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t105 = stack[3];
-	t106 = P + 7;
-	t106 = t106 + 1;
-	stack[(int)t106] = t105;
+	t121 = P - 0;
+	t119 = t121 + 3;
+	t120 = stack[(int)t119];
+	t122 = P + 7;
+	t122 = t122 + 1;
+	stack[(int)t122] = t120;
 	P = P + 7;
 	dbrust_printString();
-	t107 = stack[(int)P];
+	t123 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t108 = H;
+	t124 = H;
 	heap[(int)H] = 69;
 	H = H + 1;
 	heap[(int)H] = 108;
@@ -888,18 +907,19 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t109 = P + 7;
-	t109 = t109 + 1;
-	stack[(int)t109] = t108;
+	t125 = P + 7;
+	t125 = t125 + 1;
+	stack[(int)t125] = t124;
 	P = P + 7;
 	dbrust_printString();
-	t110 = stack[(int)P];
+	t126 = stack[(int)P];
 	P = P - 7;
 	printf("%c", 32);
 	
-	//Llamando una variable
-	t112 = stack[1];
-	if(t112 == 1) goto L11;
+	t129 = P - 0;
+	t127 = t129 + 1;
+	t128 = stack[(int)t127];
+	if(t128 == 1) goto L11;
 	goto L12;
 	L11:
 	printf("%c", (char)116);
@@ -917,37 +937,48 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	stack[7] = 100;
+	t130 = P + 7;
+	stack[(int)t130] = 100;
 	
-	stack[8] = 100;
+	t131 = P + 8;
+	stack[(int)t131] = 100;
 	
-	stack[9] = 7;
+	t132 = P + 9;
+	stack[(int)t132] = 7;
 	
 	goto L14;
 	L14:
-	stack[10] = 1;
+	t133 = P + 10;
+	stack[(int)t133] = 1;
 	goto L16;
 	L15:
-	stack[10] = 0;
+	t133 = P + 10;
+	stack[(int)t133] = 0;
 	goto L16;
 	L16:
 	
-	stack[11] = 10.0;
+	t134 = P + 11;
+	stack[(int)t134] = 10.0;
 	
-	stack[12] = 10.0;
+	t135 = P + 12;
+	stack[(int)t135] = 10.0;
 	
-	//Llamando una variable
-	t116 = stack[7];
-	//Llamando una variable
-	t118 = stack[8];
-	if(t116 > t118) goto L17;
+	t138 = P - 0;
+	t136 = t138 + 7;
+	t137 = stack[(int)t136];
+	t141 = P - 0;
+	t139 = t141 + 8;
+	t140 = stack[(int)t139];
+	if(t137 > t140) goto L17;
 	goto L18;
 	L18:
-	//Llamando una variable
-	t121 = stack[8];
-	//Llamando una variable
-	t123 = stack[9];
-	if(t121 < t123) goto L19;
+	t144 = P - 0;
+	t142 = t144 + 8;
+	t143 = stack[(int)t142];
+	t147 = P - 0;
+	t145 = t147 + 9;
+	t146 = stack[(int)t145];
+	if(t143 < t146) goto L19;
 	goto L20;
 	L19:
 	L17:
@@ -966,24 +997,29 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	//Llamando una variable
-	t128 = stack[7];
-	//Llamando una variable
-	t130 = stack[8];
-	if(t128 == t130) goto L22;
+	t150 = P - 0;
+	t148 = t150 + 7;
+	t149 = stack[(int)t148];
+	t153 = P - 0;
+	t151 = t153 + 8;
+	t152 = stack[(int)t151];
+	if(t149 == t152) goto L22;
 	goto L23;
 	L22:
-	//Llamando una variable
-	t133 = stack[11];
-	//Llamando una variable
-	t135 = stack[12];
-	if(t133 == t135) goto L24;
+	t156 = P - 0;
+	t154 = t156 + 11;
+	t155 = stack[(int)t154];
+	t159 = P - 0;
+	t157 = t159 + 12;
+	t158 = stack[(int)t157];
+	if(t155 == t158) goto L24;
 	goto L25;
 	L25:
 	L23:
-	//Llamando una variable
-	t138 = stack[9];
-	if(14 != t138) goto L26;
+	t162 = P - 0;
+	t160 = t162 + 9;
+	t161 = stack[(int)t160];
+	if(14 != t161) goto L26;
 	goto L27;
 	L26:
 	L24:
@@ -1002,22 +1038,28 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	stack[13] = 5;
+	t163 = P + 13;
+	stack[(int)t163] = 5;
 	
-	stack[14] = 5;
+	t164 = P + 14;
+	stack[(int)t164] = 5;
 	
-	stack[15] = 100;
+	t165 = P + 15;
+	stack[(int)t165] = 100;
 	
-	//Llamando una variable
-	t142 = stack[15];
-	t144 = 50 + 50;
-	//Llamando una variable
-	t147 = stack[13];
-	//Llamando una variable
-	t149 = stack[13];
-	t145 = t147 - t149;
-	t143 = t144 + t145;
-	if(t142 == t143) goto L29;
+	t168 = P - 0;
+	t166 = t168 + 15;
+	t167 = stack[(int)t166];
+	t169 = 50 + 50;
+	t172 = P - 0;
+	t170 = t172 + 13;
+	t171 = stack[(int)t170];
+	t175 = P - 0;
+	t173 = t175 + 13;
+	t174 = stack[(int)t173];
+	t176 = t171 - t174;
+	t177 = t169 + t176;
+	if(t167 == t177) goto L29;
 	goto L30;
 	L29:
 	goto L31;
@@ -1038,12 +1080,14 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	stack[16] = 15;
+	t178 = P + 16;
+	stack[(int)t178] = 15;
 	
-	//Llamando una variable
-	t155 = stack[16];
-	t153 = (int)t155 % (int)2;
-	if(t153 == 0) goto L34;
+	t181 = P - 0;
+	t179 = t181 + 16;
+	t180 = stack[(int)t179];
+	t182 = (int)t180 % (int)2;
+	if(t182 == 0) goto L34;
 	goto L35;
 	L34:
 	printf("%c", (char)116);
@@ -1061,7 +1105,7 @@ int main() {
 	printf("%c", 32);
 	
 	printf("%c", 10);
-	t156 = H;
+	t183 = H;
 	heap[(int)H] = 118;
 	H = H + 1;
 	heap[(int)H] = 97;
@@ -1089,12 +1133,12 @@ int main() {
 	heap[(int)H] = -1;
 	H = H + 1;
 	
-	t157 = P + 17;
-	t157 = t157 + 1;
-	stack[(int)t157] = t156;
+	t184 = P + 17;
+	t184 = t184 + 1;
+	stack[(int)t184] = t183;
 	P = P + 17;
 	dbrust_printString();
-	t158 = stack[(int)P];
+	t185 = stack[(int)P];
 	P = P - 17;
 	printf("%c", 32);
 	

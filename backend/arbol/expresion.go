@@ -47,7 +47,6 @@ var tipo_op_relaciones = [6][6]valor.TipoExpresion{
 
 func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	var result valor.Value
-	newTemp := generador.Mi_generador.NewTemp()
 	if e.Operacion == "&&" {
 		resultado1 := e.Valor1.Ejecutar(ambito)
 		//add op1 labels
@@ -59,7 +58,7 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		if tipo_dominante != valor.BOOLEAN {
 			panic("Error los operadores no son boolean &&")
 		}
-		result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+		result = valor.Value{Type: valor.BOOLEAN}
 		result.TrueLabel = append(resultado2.TrueLabel, result.TrueLabel...)
 		result.FalseLabel = append(resultado1.FalseLabel, result.FalseLabel...)
 		result.FalseLabel = append(resultado2.FalseLabel, result.FalseLabel...)
@@ -75,7 +74,7 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		if tipo_dominante != valor.BOOLEAN {
 			panic("Error los operadores no son boolean ||")
 		}
-		result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+		result = valor.Value{Type: valor.BOOLEAN}
 		result.TrueLabel = append(resultado1.TrueLabel, result.TrueLabel...)
 		result.TrueLabel = append(resultado2.TrueLabel, result.TrueLabel...)
 		result.FalseLabel = append(resultado2.FalseLabel, result.FalseLabel...)
@@ -83,9 +82,9 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	} else if e.Operacion == "!" {
 		resultado1 := e.Valor1.Ejecutar(ambito)
 		if resultado1.Type == valor.BOOLEAN {
-			result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
-			result.TrueLabel = append(resultado1.FalseLabel, result.TrueLabel...)
-			result.FalseLabel = append(resultado1.TrueLabel, result.FalseLabel...)
+			result = valor.Value{Type: valor.BOOLEAN}
+			result.TrueLabel = append(result.TrueLabel, resultado1.FalseLabel...)
+			result.FalseLabel = append(result.FalseLabel, resultado1.TrueLabel...)
 			return result
 		} else {
 			panic("No se puede hacer la operacion (!)")
@@ -93,9 +92,9 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	} else if e.Operacion == "negacion" {
 		resultado1 := e.Valor1.Ejecutar(ambito)
 		if resultado1.Type == valor.INTEGER || resultado1.Type == valor.FLOAT {
+			newTemp := generador.Mi_generador.NewTemp()
 			generador.Mi_generador.AddExpression(newTemp, "", resultado1.Value, "-")
-			result = valor.Value{Value: newTemp, IsTemp: true, Type: resultado1.Type}
-			result.IntValue = -resultado1.IntValue
+			result = valor.Value{Value: newTemp, Type: resultado1.Type}
 			return result
 		} else {
 			panic("No se puede negar la operacion")
@@ -118,11 +117,11 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		}
 		switch e.Operacion {
 		case "+":
+			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "+")
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
-				result.IntValue = resultado1.IntValue + resultado2.IntValue
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else if tipo_dominante == valor.STRING {
 				newTemp := generador.Mi_generador.NewTemp()
@@ -158,32 +157,33 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				generador.Mi_generador.AddSetHeap("(int)H", "-1")
 				generador.Mi_generador.AddExpression("H", "H", "1", "+")
 				generador.Mi_generador.AddBr()
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
 		case "-":
+			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "-")
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
-				result.IntValue = resultado1.IntValue - resultado2.IntValue
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
 		case "*":
+			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "*")
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
-				result.IntValue = resultado1.IntValue * resultado2.IntValue
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
 		case "/":
+			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
 				lvl1 := generador.Mi_generador.NewLabel()
@@ -203,31 +203,29 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				generador.Mi_generador.AddLabel(lvl1)
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "/")
 				generador.Mi_generador.AddLabel(lvl2)
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
 		case "%":
+			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER {
 				generador.Mi_generador.AddExpression(newTemp, "(int)"+resultado1.Value, "(int)"+resultado2.Value, "%")
-				result = valor.Value{Value: newTemp, IsTemp: true, Type: tipo_dominante}
-				result.IntValue = resultado1.IntValue % resultado2.IntValue
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
 		case ">":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR { // agregar char si funciona igual
+			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, ">", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -238,14 +236,12 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			}
 		case "<":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR { // agregar char si funciona igual
+			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, "<", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -256,14 +252,12 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			}
 		case ">=":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR { // agregar char si funciona igual
+			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, ">=", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -274,14 +268,12 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			}
 		case "<=":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR { // agregar char si funciona igual
+			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT || tipo_dominante == valor.CHAR {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, "<=", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -297,11 +289,9 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante != valor.NULL {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, "==", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -315,11 +305,9 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante != valor.NULL {
 				trueLabel := generador.Mi_generador.NewLabel()
 				falseLabel := generador.Mi_generador.NewLabel()
-
 				generador.Mi_generador.AddIf(resultado1.Value, resultado2.Value, "!=", trueLabel)
 				generador.Mi_generador.AddGoto(falseLabel)
-
-				result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+				result = valor.Value{Type: valor.BOOLEAN}
 				result.TrueLabel = append(result.TrueLabel, trueLabel)
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
@@ -332,6 +320,7 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 	}
 }
 
+// para string, resuelve que string es mayor
 func operacion_comparacion(operacion string, resultado1 valor.Value, resultado2 valor.Value) valor.Value {
 	temp_contador1 := generador.Mi_generador.NewTemp()
 	temp_contador2 := generador.Mi_generador.NewTemp()
@@ -360,8 +349,6 @@ func operacion_comparacion(operacion string, resultado1 valor.Value, resultado2 
 	generador.Mi_generador.AddIf(temp_contador1, temp_contador2, operacion, true_label_comparacion)
 	generador.Mi_generador.AddGoto(false_label_comparacion)
 
-	result := valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
-	result.TrueLabel = append(result.TrueLabel, true_label_comparacion)
-	result.FalseLabel = append(result.FalseLabel, false_label_comparacion)
+	result := valor.Value{Type: valor.BOOLEAN}
 	return result
 }

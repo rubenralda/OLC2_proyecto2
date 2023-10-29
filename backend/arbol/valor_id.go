@@ -12,9 +12,9 @@ type Id_expresion struct {
 }
 
 func (a Id_expresion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	generador.Mi_generador.AddComment("Llamando una variable")
+	//generador.Mi_generador.AddComment("Llamando una variable")
 	var result valor.Value
-	id_buscado := ambito_padre.BuscarVariable(a.Id)
+	id_buscado, size_total := ambito_padre.BuscarVariable(a.Id)
 	if id_buscado == nil {
 		panic("La variable no existe " + a.Id)
 	}
@@ -23,12 +23,11 @@ func (a Id_expresion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	}
 	tmp_posicion := generador.Mi_generador.NewTemp()
 	temp2 := generador.Mi_generador.NewTemp()
-	if generador.Mi_generador.MainCode {
-		generador.Mi_generador.AddGetStack(temp2, strconv.Itoa(id_buscado.Posicion_relativa))
-	} else {
-		generador.Mi_generador.AddExpression(tmp_posicion, "P", strconv.Itoa(id_buscado.Posicion_relativa), "+")
-		generador.Mi_generador.AddGetStack(temp2, "(int)"+tmp_posicion)
-	}
+	tmp_posicion_entorno := generador.Mi_generador.NewTemp()
+
+	generador.Mi_generador.AddExpression(tmp_posicion_entorno, "P", strconv.Itoa(size_total), "-")
+	generador.Mi_generador.AddExpression(tmp_posicion, tmp_posicion_entorno, strconv.Itoa(id_buscado.Posicion_relativa), "+")
+	generador.Mi_generador.AddGetStack(temp2, "(int)"+tmp_posicion)
 
 	if id_buscado.Tipo_dimension == valor.DIMENSION1 || id_buscado.Tipo_dimension == valor.DIMENSIONN {
 		// logica para retornar un vector o una matriz
@@ -39,7 +38,7 @@ func (a Id_expresion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 
 		generador.Mi_generador.AddIf(temp2, "1", "==", true_label)
 		generador.Mi_generador.AddGoto(false_label)
-		result = valor.Value{Value: "", IsTemp: false, Type: valor.BOOLEAN}
+		result = valor.Value{Type: valor.BOOLEAN}
 		result.TrueLabel = append(result.TrueLabel, true_label)
 		result.FalseLabel = append(result.FalseLabel, false_label)
 	} else {

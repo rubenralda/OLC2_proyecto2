@@ -18,14 +18,16 @@ type Declarar_variable struct {
 
 func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	result := valor.Value{Type: valor.NULL}
-	if ambito_padre.BuscarVariable(d.Id) != nil {
+	if rr, _ := ambito_padre.BuscarVariable(d.Id); rr != nil {
 		panic("Error la variable ya existe: " + d.Id)
 	}
 	variable := ambito.Variables{Id: d.Id, Posicion_relativa: ambito_padre.Size, Tipo_dimension: valor.DIMENSION0}
+	tmp_posicion_variable := generador.Mi_generador.NewTemp()
 	if d.Expresion == nil {
 		if d.Tipo != "" {
 			variable.Tipo = Tipo_variable[d.Tipo]
 			if variable.Tipo == valor.NULL {
+				//buscar el struct y darle el tipo falta
 				variable.Tipo_struct = d.Tipo
 				variable.Is_instancia = true
 			}
@@ -42,27 +44,25 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		if d.Tipo != "Bool" && d.Tipo != "" {
 			panic("Error tipos no coinciden")
 		}
-		//si no es temp (boolean)
 		newLabel := generador.Mi_generador.NewLabel()
 		//add labels
 		for _, lvl := range resultado.TrueLabel {
 			generador.Mi_generador.AddLabel(lvl.(string))
 		}
-		generador.Mi_generador.AddSetStack(strconv.Itoa(variable.Posicion_relativa), "1")
+		generador.Mi_generador.AddExpression(tmp_posicion_variable, "P", strconv.Itoa(variable.Posicion_relativa), "+")
+		generador.Mi_generador.AddSetStack("(int)"+tmp_posicion_variable, "1")
 		generador.Mi_generador.AddGoto(newLabel)
 		//add labels
 		for _, lvl := range resultado.FalseLabel {
 			generador.Mi_generador.AddLabel(lvl.(string))
 		}
-		generador.Mi_generador.AddSetStack(strconv.Itoa(variable.Posicion_relativa), "0")
+		generador.Mi_generador.AddExpression(tmp_posicion_variable, "P", strconv.Itoa(variable.Posicion_relativa), "+")
+		generador.Mi_generador.AddSetStack("(int)"+tmp_posicion_variable, "0")
 		generador.Mi_generador.AddGoto(newLabel)
 		generador.Mi_generador.AddLabel(newLabel)
 		generador.Mi_generador.AddBr()
 		variable.Tipo = resultado.Type
-	} else if resultado.Type == valor.NULL {
-		panic("Error")
 	} else {
-		variable.Tipo = Tipo_variable[d.Tipo]
 		if d.Tipo == "" { //no viene con tipo
 			if resultado.Is_intancia {
 				variable.Is_instancia = true
@@ -71,17 +71,20 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				variable.Is_instancia = false
 				variable.Tipo = resultado.Type
 			}
-		} else if variable.Tipo == valor.NULL { //el tipo de una clase
+		} else if resultado.Is_intancia { //el tipo de una clase
 			if resultado.Tipo_struct == d.Tipo {
 				variable.Is_instancia = true
 				variable.Tipo_struct = result.Tipo_struct
 			} else {
 				panic("Error tipos no coinciden")
 			}
-		} else if variable.Tipo != resultado.Type {
+		} else if Tipo_variable[d.Tipo] == resultado.Type {
+			variable.Tipo = resultado.Type
+		} else {
 			panic("Error el tipo de la expresion y la variable no coinciden")
 		}
-		generador.Mi_generador.AddSetStack(strconv.Itoa(variable.Posicion_relativa), resultado.Value)
+		generador.Mi_generador.AddExpression(tmp_posicion_variable, "P", strconv.Itoa(variable.Posicion_relativa), "+")
+		generador.Mi_generador.AddSetStack("(int)"+tmp_posicion_variable, resultado.Value)
 		generador.Mi_generador.AddBr()
 	}
 	variable.Is_init = true
