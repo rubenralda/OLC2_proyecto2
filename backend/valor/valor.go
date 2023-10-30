@@ -14,7 +14,6 @@ type Value struct {
 	//			|
 	//			V
 	Referencia bool
-	OutLabel   []interface{}
 }
 
 type TipoExpresion int
