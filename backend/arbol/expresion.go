@@ -119,8 +119,13 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		case "+":
 			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
+			if tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "+")
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
+				return result
+			} else if tipo_dominante == valor.INTEGER {
+				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "+")
+				generador.Mi_generador.AddAssign(newTemp, "(int)"+newTemp)
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else if tipo_dominante == valor.STRING {
@@ -165,8 +170,13 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		case "-":
 			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
+			if tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "-")
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
+				return result
+			} else if tipo_dominante == valor.INTEGER {
+				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "-")
+				generador.Mi_generador.AddAssign(newTemp, "(int)"+newTemp)
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
@@ -175,8 +185,13 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		case "*":
 			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
+			if tipo_dominante == valor.FLOAT {
 				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "*")
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
+				return result
+			} else if tipo_dominante == valor.INTEGER {
+				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "*")
+				generador.Mi_generador.AddAssign(newTemp, "(int)"+newTemp)
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
@@ -185,7 +200,7 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		case "/":
 			newTemp := generador.Mi_generador.NewTemp()
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
-			if tipo_dominante == valor.INTEGER || tipo_dominante == valor.FLOAT {
+			if tipo_dominante == valor.FLOAT {
 				lvl1 := generador.Mi_generador.NewLabel()
 				lvl2 := generador.Mi_generador.NewLabel()
 				generador.Mi_generador.AddIf(resultado2.Value, "0", "!=", lvl1)
@@ -205,6 +220,27 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				generador.Mi_generador.AddLabel(lvl2)
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
+			} else if tipo_dominante == valor.INTEGER {
+				lvl1 := generador.Mi_generador.NewLabel()
+				lvl2 := generador.Mi_generador.NewLabel()
+				generador.Mi_generador.AddIf(resultado2.Value, "0", "!=", lvl1)
+				generador.Mi_generador.AddPrintf("c", "77")
+				generador.Mi_generador.AddPrintf("c", "97")
+				generador.Mi_generador.AddPrintf("c", "116")
+				generador.Mi_generador.AddPrintf("c", "104")
+				generador.Mi_generador.AddPrintf("c", "69")
+				generador.Mi_generador.AddPrintf("c", "114")
+				generador.Mi_generador.AddPrintf("c", "114")
+				generador.Mi_generador.AddPrintf("c", "111")
+				generador.Mi_generador.AddPrintf("c", "114")
+				generador.Mi_generador.AddExpression(newTemp, "0", "", "")
+				generador.Mi_generador.AddGoto(lvl2)
+				generador.Mi_generador.AddLabel(lvl1)
+				generador.Mi_generador.AddExpression(newTemp, resultado1.Value, resultado2.Value, "/")
+				generador.Mi_generador.AddAssign(newTemp, "(int)"+newTemp)
+				generador.Mi_generador.AddLabel(lvl2)
+				result = valor.Value{Value: newTemp, Type: tipo_dominante}
+				return result
 			} else { // nil
 				panic("Error tipo no valido")
 			}
@@ -213,6 +249,7 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			tipo_dominante := tipo_op_aritmetica[resultado1.Type][resultado2.Type]
 			if tipo_dominante == valor.INTEGER {
 				generador.Mi_generador.AddExpression(newTemp, "(int)"+resultado1.Value, "(int)"+resultado2.Value, "%")
+				generador.Mi_generador.AddAssign(newTemp, "(int)"+newTemp)
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil

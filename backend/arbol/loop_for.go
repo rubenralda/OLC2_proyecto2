@@ -13,6 +13,6 @@ type Loop_for_in struct {
 	Sentencias []BaseNodo
 }
 
-func (a Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
+func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	return valor.Value{}
 }
