@@ -20,18 +20,6 @@ type Generator struct {
 
 var Mi_generador *Generator
 
-func NewGenerator() Generator {
-	generator := Generator{
-		Temporal:        0,
-		Label:           0,
-		BreakLabel:      "",
-		ContinueLabel:   "",
-		PrintStringFlag: true,
-		MainCode:        false,
-	}
-	return generator
-}
-
 func (g Generator) GetCode() []interface{} {
 	return g.Code
 }

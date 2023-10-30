@@ -18,10 +18,13 @@ func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
 	for _, expresion := range i.Lista_expresion {
 		result = expresion.Ejecutar(ambito_padre)
-		if result.Type == valor.INTEGER || result.Type == valor.FLOAT || result.Type == valor.CHAR {
+		if result.Type == valor.INTEGER || result.Type == valor.FLOAT {
 			generador.Mi_generador.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
 			generador.Mi_generador.AddPrintf("c", "32")
 			generador.Mi_generador.AddBr()
+		} else if result.Type == valor.CHAR {
+			generador.Mi_generador.AddPrintf("c", "(char)"+result.Value)
+			generador.Mi_generador.AddPrintf("c", "32")
 		} else if result.Type == valor.BOOLEAN {
 			newLabel := generador.Mi_generador.NewLabel()
 			//add labels
