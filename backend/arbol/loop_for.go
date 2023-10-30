@@ -18,14 +18,17 @@ type Loop_for_in struct {
 func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia for", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
-
+	ambito_local.Is_ciclo = true
+	label_final := generador.Mi_generador.NewLabel()
+	label_inicio := generador.Mi_generador.NewLabel()
+	ambito_local.BreakLabel = label_final
+	ambito_local.ContinueLabel = label_inicio
 	if s.Expresion == nil {
 		inicio := s.Inicio.Ejecutar(ambito_padre)
 		final := s.Final.Ejecutar(ambito_padre)
 		if inicio.Type != valor.INTEGER && final.Type != valor.INTEGER {
 			panic("El rango no es entero")
 		}
-		label_final := generador.Mi_generador.NewLabel()
 		label_error := generador.Mi_generador.NewLabel()
 		generador.Mi_generador.AddIf(inicio.Value, final.Value, ">", label_error) //si es mayor el inicio error
 		tmp_contador := generador.Mi_generador.NewTemp()
@@ -37,7 +40,6 @@ func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddSetStack("(int)P", tmp_contador)
 		ambito_local.Size++
 
-		label_inicio := generador.Mi_generador.NewLabel()
 		generador.Mi_generador.AddLabel(label_inicio)
 
 		generador.Mi_generador.AddGetStack(tmp_contador, "(int)P")
@@ -57,7 +59,7 @@ func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		resultado := s.Expresion.Ejecutar(ambito_padre)
 		if resultado.Type == valor.STRING {
 			generador.Mi_generador.AddComment("chucho")
-			label_final := generador.Mi_generador.NewLabel()
+
 			tmp_puntero := generador.Mi_generador.NewTemp()
 			tmp_valor := generador.Mi_generador.NewTemp()
 			tmp_posicion := generador.Mi_generador.NewTemp()
@@ -75,7 +77,6 @@ func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 			generador.Mi_generador.AddSetStack("(int)"+tmp_posicion, tmp_valor) //valor del char
 			ambito_local.Size++
 
-			label_inicio := generador.Mi_generador.NewLabel()
 			generador.Mi_generador.AddLabel(label_inicio)
 
 			generador.Mi_generador.AddGetStack(tmp_puntero, "(int)P") //recupero

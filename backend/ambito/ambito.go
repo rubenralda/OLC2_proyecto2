@@ -42,6 +42,15 @@ type Ambito struct {
 	Variables    []*Variables
 	Funciones    []*Funciones
 	Size         int
+
+	//para llamadas
+	Is_ambito_llamada bool // si esta activa desde aqui se hizo la llamada
+	Tipo_funcion      valor.TipoExpresion
+
+	//para ciclos
+	Is_ciclo      bool //si esta activa es el ambito del ciclo
+	BreakLabel    string
+	ContinueLabel string
 }
 
 func (a *Ambito) AgregarVariable(variable Variables) {
@@ -74,4 +83,41 @@ func (a *Ambito) BuscarVariable(id string) (*Variables, int) {
 		}
 	}
 	return elemento, size
+}
+
+//retorna el size al ambito donde se llamo y si se activo, 0 si es el actual
+func (a *Ambito) Buscar_llamada_ambito() (int, bool, *Ambito) {
+	anterior := a
+	size := 0
+	for {
+		if anterior.Is_ambito_llamada {
+			return size, true, anterior
+		}
+		anterior = anterior.Padre
+		if anterior != nil {
+			size += anterior.Size
+		} else {
+			break
+		}
+	}
+	return size, false, nil
+}
+
+//retorna el size hasta el ambito del ultimo ciclo, etiquta break, etiqueta continue y si se encontro
+func (a *Ambito) Activacion_ciclo() (int, string, string, bool) {
+	anterior := a
+	size := 0
+	for {
+		if anterior.Is_ciclo {
+			size += anterior.Padre.Size
+			return size, anterior.BreakLabel, anterior.ContinueLabel, true
+		}
+		anterior = anterior.Padre
+		if anterior != nil {
+			size += anterior.Size
+		} else {
+			break
+		}
+	}
+	return size, anterior.BreakLabel, anterior.ContinueLabel, false
 }

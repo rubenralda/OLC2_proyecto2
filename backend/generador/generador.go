@@ -13,8 +13,6 @@ type Generator struct {
 	FuncCode        []interface{}
 	TempList        []interface{}
 	PrintStringFlag bool
-	BreakLabel      string
-	ContinueLabel   string
 	MainCode        bool
 }
 
@@ -34,16 +32,6 @@ func (g Generator) GetTemps() []interface{} {
 
 func (g *Generator) SetMainFlag(newVal bool) {
 	g.MainCode = newVal
-}
-
-// add break lvl
-func (g *Generator) AddBreak(lvl string) {
-	g.BreakLabel = lvl
-}
-
-// add continue lvl
-func (g *Generator) AddContinue(lvl string) {
-	g.ContinueLabel = lvl
 }
 
 // Generar un nuevo temporal
@@ -84,6 +72,14 @@ func (g *Generator) AddGoto(Label string) {
 		g.Code = append(g.Code, "goto "+Label+";\n")
 	} else {
 		g.FuncCode = append(g.FuncCode, "goto "+Label+";\n")
+	}
+}
+
+func (g *Generator) AddReturn() {
+	if g.MainCode {
+		g.Code = append(g.Code, "return"+";\n")
+	} else {
+		g.FuncCode = append(g.FuncCode, "return"+";\n")
 	}
 }
 
