@@ -13,7 +13,7 @@ type Value struct {
 	//verificar y borrar algunos
 	//			|
 	//			V
-	Referencia bool
+	Referencia string
 }
 
 type TipoExpresion int

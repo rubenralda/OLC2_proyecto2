@@ -34,11 +34,21 @@ func (d Asignacion_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		}
 	} else if variable.Tipo == valor.FLOAT {
 		if resultado.Type == valor.INTEGER || resultado.Type == valor.FLOAT {
-			//validar antes si es por referencia
 			posicion_entorno := generador.Mi_generador.NewTemp()
-			generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+			if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+				generador.Mi_generador.AddAssign(posicion_entorno, "0")
+			} else {
+				generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+			}
 			generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-			generador.Mi_generador.AddSetStack("(int)"+posicion_variable, resultado.Value)
+			if variable.Is_referencia {
+				tmp_puntero := generador.Mi_generador.NewTemp()
+				//obtener el puntero y modificar en esa posicion el valor
+				generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+				generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, resultado.Value)
+			} else {
+				generador.Mi_generador.AddSetStack("(int)"+posicion_variable, resultado.Value)
+			}
 			variable.Is_init = true
 		} else {
 			panic("Error de tipos al asignar " + d.Id)
@@ -53,28 +63,60 @@ func (d Asignacion_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		for _, lvl := range resultado.TrueLabel {
 			generador.Mi_generador.AddLabel(lvl.(string))
 		}
-		generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+			generador.Mi_generador.AddAssign(posicion_entorno, "0")
+		} else {
+			generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		}
 		generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-		generador.Mi_generador.AddSetStack("(int)"+posicion_variable, "1")
+		if variable.Is_referencia {
+			tmp_puntero := generador.Mi_generador.NewTemp()
+			//obtener el puntero y modificar en esa posicion el valor
+			generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+			generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, "1")
+		} else {
+			generador.Mi_generador.AddSetStack("(int)"+posicion_variable, "1")
+		}
 		generador.Mi_generador.AddGoto(newLabel)
 		//add labels
 		for _, lvl := range resultado.FalseLabel {
 			generador.Mi_generador.AddLabel(lvl.(string))
 		}
-		generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+			generador.Mi_generador.AddAssign(posicion_entorno, "0")
+		} else {
+			generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		}
 		generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-		generador.Mi_generador.AddSetStack("(int)"+posicion_variable, "0")
+		if variable.Is_referencia {
+			tmp_puntero := generador.Mi_generador.NewTemp()
+			//obtener el puntero y modificar en esa posicion el valor
+			generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+			generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, "0")
+		} else {
+			generador.Mi_generador.AddSetStack("(int)"+posicion_variable, "0")
+		}
 		generador.Mi_generador.AddGoto(newLabel)
 		generador.Mi_generador.AddLabel(newLabel)
 		generador.Mi_generador.AddBr()
 		variable.Is_init = true
 	} else if variable.Tipo == resultado.Type { //tipo primitivos
 		//validar antes si es por referencia
-		posicion_variable := generador.Mi_generador.NewTemp()
 		posicion_entorno := generador.Mi_generador.NewTemp()
-		generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+			generador.Mi_generador.AddAssign(posicion_entorno, "0")
+		} else {
+			generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		}
 		generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-		generador.Mi_generador.AddSetStack("(int)"+posicion_variable, resultado.Value)
+		if variable.Is_referencia {
+			tmp_puntero := generador.Mi_generador.NewTemp()
+			//obtener el puntero y modificar en esa posicion el valor
+			generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+			generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, resultado.Value)
+		} else {
+			generador.Mi_generador.AddSetStack("(int)"+posicion_variable, resultado.Value)
+		}
 		variable.Is_init = true
 	} else {
 		panic("Error de tipo al asignar " + d.Id)

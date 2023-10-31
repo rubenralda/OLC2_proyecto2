@@ -41,22 +41,25 @@ type Sentencia_return struct {
 }
 
 func (s Sentencia_return) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	if !s.Tipo_retorno {
-		generador.Mi_generador.AddReturn()
-		return valor.Value{}
-	}
-	size, encontrado, ambito := ambito_padre.Buscar_llamada_ambito()
-	if encontrado {
-		resultado := s.Expresion.Ejecutar(ambito_padre)
-		if resultado.Type != ambito.Tipo_funcion {
-			panic("El tipo del retorno no coincide con el de la funcion")
+	size, activado, ambito := ambito_padre.Buscar_llamada_ambito()
+	if activado {
+		if !s.Tipo_retorno {
+			if ambito.Tipo_funcion != valor.NULL {
+				panic("No se esperaba un valor de retorno")
+			}
+			generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(size), "-")
+			generador.Mi_generador.AddGoto(ambito.Label_salida)
+		} else {
+			resultado := s.Expresion.Ejecutar(ambito_padre)
+			if resultado.Type != ambito.Tipo_funcion {
+				panic("El tipo del retorno no coincide con el de la funcion")
+			}
+			generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(size), "-")
+			generador.Mi_generador.AddSetStack("(int)P", resultado.Value)
+			generador.Mi_generador.AddGoto(ambito.Label_salida)
 		}
-		tmp_retorno := generador.Mi_generador.NewTemp()
-		generador.Mi_generador.AddExpression(tmp_retorno, "P", strconv.Itoa(size), "-")
-		generador.Mi_generador.AddSetStack("(int)"+tmp_retorno, resultado.Value)
 	} else {
 		panic("El retorno no esta en una funcion")
 	}
-
 	return valor.Value{}
 }

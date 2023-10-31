@@ -105,13 +105,13 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		if _, ok := e.Valor2.(Llamada_funcion); ok {
 			tmp_posicion := generador.Mi_generador.NewTemp()
 			generador.Mi_generador.AddExpression(tmp_posicion, "P", strconv.Itoa(ambito.Size), "+")
-			generador.Mi_generador.AddSetStack(tmp_posicion, resultado1.Value)
+			generador.Mi_generador.AddSetStack("(int)"+tmp_posicion, resultado1.Value)
 			ambito.Size += 1
 			resultado2 = e.Valor2.Ejecutar(ambito)
 			ambito.Size -= 1
 			tmp_posicion = generador.Mi_generador.NewTemp()
 			generador.Mi_generador.AddExpression(tmp_posicion, "P", strconv.Itoa(ambito.Size), "+")
-			generador.Mi_generador.AddGetStack(resultado1.Value, tmp_posicion)
+			generador.Mi_generador.AddGetStack(resultado1.Value, "(int)"+tmp_posicion)
 		} else {
 			resultado2 = e.Valor2.Ejecutar(ambito)
 		}

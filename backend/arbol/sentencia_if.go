@@ -16,6 +16,7 @@ type Sentencia_if struct {
 
 func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
+	generador.Mi_generador.AddComment("if_sentencia")
 	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia if", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
 	resultado := s.Expresion.Ejecutar(ambito_padre)
@@ -31,7 +32,7 @@ func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(ambito_padre.Size), "+")
 	//sentencias verdaderas
 	for _, linea := range s.Sentencias {
-		linea.Ejecutar(ambito_padre)
+		linea.Ejecutar(ambito_local)
 	}
 	//add out labels
 	generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(ambito_padre.Size), "-")
@@ -46,7 +47,7 @@ func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		// muevo el puntero al nuevo ambito
 		generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(ambito_padre.Size), "+")
 		for _, linea := range s.Sentencias_else {
-			linea.Ejecutar(ambito_padre)
+			linea.Ejecutar(ambito_local)
 		}
 		generador.Mi_generador.AddExpression("P", "P", strconv.Itoa(ambito_padre.Size), "-")
 	}
@@ -54,5 +55,6 @@ func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	generador.Mi_generador.AddGoto(label_salida)
 	//agregando etiquetas de salida
 	generador.Mi_generador.AddLabel(label_salida)
+	generador.Mi_generador.AddComment("fin_if_sentendia")
 	return result
 }

@@ -30,9 +30,20 @@ type Variables struct {
 	Is_instancia      bool                //si es un objeto, se usa el tipo struct
 	Is_init           bool                //Si fue declarada con un valor o no
 	Is_constante      bool                //Si fue declarada con let
+	Is_referencia     bool                //si esta activa, el valor en el stack es otro puntero al stack
+}
+
+type Parametros struct {
+	Id_interno  string
+	Id_externo  string
+	Tipo        valor.TipoExpresion
+	Tipo_struct string
 }
 
 type Funciones struct {
+	Nombre     string
+	Tipo       valor.TipoExpresion //INT, FLOAT, STRING, BOOL, CHAR, NULL (void)
+	Parametros []Parametros
 }
 
 type Ambito struct {
@@ -44,13 +55,18 @@ type Ambito struct {
 	Size         int
 
 	//para llamadas
-	Is_ambito_llamada bool // si esta activa desde aqui se hizo la llamada
-	Tipo_funcion      valor.TipoExpresion
+	Modo_funcion bool
+	Tipo_funcion valor.TipoExpresion
+	Label_salida string
 
 	//para ciclos
 	Is_ciclo      bool //si esta activa es el ambito del ciclo
 	BreakLabel    string
 	ContinueLabel string
+}
+
+func (a *Ambito) AgregarFuncion(funcion *Funciones) {
+	a.Funciones = append(a.Funciones, funcion)
 }
 
 func (a *Ambito) AgregarVariable(variable Variables) {
@@ -90,7 +106,7 @@ func (a *Ambito) Buscar_llamada_ambito() (int, bool, *Ambito) {
 	anterior := a
 	size := 0
 	for {
-		if anterior.Is_ambito_llamada {
+		if anterior.Modo_funcion {
 			return size, true, anterior
 		}
 		anterior = anterior.Padre
@@ -120,4 +136,39 @@ func (a *Ambito) Activacion_ciclo() (int, string, string, bool) {
 		}
 	}
 	return size, anterior.BreakLabel, anterior.ContinueLabel, false
+}
+
+var Ambito_global *Ambito
+
+func (a *Ambito) Is_global_variable(id string) bool {
+	is_global := false
+	for _, value := range Ambito_global.Variables {
+		if value.Id == id {
+			is_global = true
+		}
+	}
+	return is_global
+}
+
+func (a *Ambito) Buscar_funcion(id string) (*Funciones, int) {
+	anterior := a
+	var elemento *Funciones
+	size := 0
+	for {
+		for _, value := range anterior.Funciones {
+			if value.Nombre == id {
+				elemento = value
+			}
+		}
+		if elemento != nil {
+			break
+		}
+		anterior = anterior.Padre
+		if anterior != nil {
+			size += anterior.Size
+		} else {
+			break
+		}
+	}
+	return elemento, size
 }

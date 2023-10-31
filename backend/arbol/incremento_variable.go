@@ -47,9 +47,20 @@ func (d Incremento_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		//iguala a heap pointer del nuevo string
 		generador.Mi_generador.AddAssign(tmp_sumado, "H")
 		//obtener el valor del puntero al heap, validar antes si es por referencia aqui
-		generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+			generador.Mi_generador.AddAssign(posicion_entorno, "0")
+		} else {
+			generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "-")
+		}
 		generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-		generador.Mi_generador.AddGetStack(tmp_puntero1, "(int)"+posicion_variable)
+		tmp_puntero := generador.Mi_generador.NewTemp() //puntero referencia
+		if variable.Is_referencia {
+			//obtener el puntero y modificar en esa posicion el valor
+			generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+			generador.Mi_generador.AddGetStack(tmp_puntero1, "(int)"+tmp_puntero)
+		} else {
+			generador.Mi_generador.AddGetStack(tmp_puntero1, "(int)"+posicion_variable)
+		}
 
 		// copiar string del tmp_puntero1
 		generador.Mi_generador.AddLabel(false_label)                               //label true
@@ -64,7 +75,7 @@ func (d Incremento_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 
 		//copiar string del resultado 2
 		true_label2 := generador.Mi_generador.NewLabel()                                 //label true
-		generador.Mi_generador.AddGetHeap(tem_valor, "(int)"+resultado.Value)            //valor en el heep
+		generador.Mi_generador.AddGetHeap(tem_valor, "(int)"+resultado.Value)            //valor en el heep, resultado es un temporal
 		generador.Mi_generador.AddExpression(resultado.Value, resultado.Value, "1", "+") //incremento el valor del puntero
 
 		generador.Mi_generador.AddIf(tem_valor, "-1", "==", true_label2)
@@ -77,7 +88,11 @@ func (d Incremento_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddSetHeap("(int)H", "-1")
 		generador.Mi_generador.AddExpression("H", "H", "1", "+")
 		//escribir el nuevo puntero del string en el stack
-		generador.Mi_generador.AddSetStack("(int)"+posicion_variable, tmp_sumado)
+		if variable.Is_referencia {
+			generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, tmp_sumado)
+		} else {
+			generador.Mi_generador.AddSetStack("(int)"+posicion_variable, tmp_sumado)
+		}
 		generador.Mi_generador.AddBr()
 		return result
 	} else {
@@ -88,12 +103,24 @@ func (d Incremento_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	posicion_entorno := generador.Mi_generador.NewTemp()
 	tmp_valor := generador.Mi_generador.NewTemp()
 	tmp_final := generador.Mi_generador.NewTemp()
-	generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "+")
+	if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+		generador.Mi_generador.AddAssign(posicion_entorno, "0")
+	} else {
+		generador.Mi_generador.AddExpression(posicion_entorno, "P", strconv.Itoa(size_total), "+")
+	}
 	generador.Mi_generador.AddExpression(posicion_variable, posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
-	generador.Mi_generador.AddGetStack(tmp_valor, "(int)"+posicion_variable)
-
-	generador.Mi_generador.AddExpression(tmp_final, tmp_valor, resultado.Value, "+")
-	generador.Mi_generador.AddSetStack("(int)"+posicion_variable, tmp_final)
+	if variable.Is_referencia {
+		tmp_puntero := generador.Mi_generador.NewTemp()
+		//obtener el puntero y modificar en esa posicion el valor
+		generador.Mi_generador.AddGetStack(tmp_puntero, "(int)"+posicion_variable)
+		generador.Mi_generador.AddGetStack(tmp_valor, "(int)"+tmp_puntero)
+		generador.Mi_generador.AddExpression(tmp_final, tmp_valor, resultado.Value, "+")
+		generador.Mi_generador.AddSetStack("(int)"+tmp_puntero, tmp_final)
+	} else {
+		generador.Mi_generador.AddGetStack(tmp_valor, "(int)"+posicion_variable)
+		generador.Mi_generador.AddExpression(tmp_final, tmp_valor, resultado.Value, "+")
+		generador.Mi_generador.AddSetStack("(int)"+posicion_variable, tmp_final)
+	}
 	variable.Is_init = true
 	return result
 }

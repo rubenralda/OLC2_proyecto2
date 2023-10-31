@@ -860,6 +860,7 @@ func main() {
 	visitor := parser_visitor{}
 	resultado := visitor.Visit(p.Inicio()).([]arbol.BaseNodo)
 	ambito_global := &ambito.Ambito{NombreAmbito: "global"}
+	ambito.Ambito_global = ambito_global
 	for _, linea := range resultado {
 		linea.Ejecutar(ambito_global)
 	}
