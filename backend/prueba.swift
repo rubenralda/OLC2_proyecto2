@@ -53,5 +53,36 @@ let num3 = Float("9.5")
 let num4 = Float("3.6")
 let num1 = Int("20")
 let num2 = Int("20")
+let suma = String(num1 + num2)
+let resta = String(num3 - num4)
+let cadena = String(true) + "->" + String(3.504)
 
-print(num3, num4)
+print("valor true: ", String(true))
+print("valor false: ", String(false))
+print("valor 1: ", suma)
+print("valor 2: ", resta)
+print("valor cadena: ", cadena);
+
+/*
+--------------------------
+---FUNCIONES EMBEBIDAS----
+----------14 pts----------
+--------------------------
+
+La suma es:  8
+
+hola
+mundo
+saludos!
+
+251
+85
+
+numero2: 2
+
+valor true:  true
+valor false:  false
+valor 1:  40
+valor 2:  5.9
+valor cadena:  true->3.504
+*/

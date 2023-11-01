@@ -152,29 +152,69 @@ type Funcion_string struct {
 
 func (f Funcion_string) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	resultado := f.Expresion.Ejecutar(ambito_padre)
-	//llamar a generar printstring
-	generador.Mi_generador.Generar_funcion_string()
-	//agregar codigo en el main
-	posicion_parametro := generador.Mi_generador.NewTemp()
-	newTemp2 := generador.Mi_generador.NewTemp()
-	size := strconv.Itoa(ambito_padre.Size)
-	generador.Mi_generador.AddExpression(posicion_parametro, "P", size, "+")               //nuevo temporal en pos vacia
-	generador.Mi_generador.AddExpression(posicion_parametro, posicion_parametro, "1", "+") //se deja espacio de retorno
-
-	if resultado.Referencia != "" {
-		valor_refe := generador.Mi_generador.NewTemp()
-		generador.Mi_generador.AddGetStack(valor_refe, "(int)"+resultado.Referencia)
-		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, valor_refe)
-	} else {
-		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, resultado.Value) //parametro
-	}
-	generador.Mi_generador.AddExpression("P", "P", size, "+") // cambio de entorno
 	if resultado.Type == valor.FLOAT || resultado.Type == valor.INTEGER {
+		//llamar a generar printstring
+		generador.Mi_generador.Generar_funcion_string()
+		//agregar codigo en el main
+		posicion_parametro := generador.Mi_generador.NewTemp()
+		newTemp2 := generador.Mi_generador.NewTemp()
+		size := strconv.Itoa(ambito_padre.Size)
+		generador.Mi_generador.AddExpression(posicion_parametro, "P", size, "+")               //nuevo temporal en pos vacia
+		generador.Mi_generador.AddExpression(posicion_parametro, posicion_parametro, "1", "+") //se deja espacio de retorno
+
+		if resultado.Referencia != "" {
+			valor_refe := generador.Mi_generador.NewTemp()
+			generador.Mi_generador.AddGetStack(valor_refe, "(int)"+resultado.Referencia)
+			generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, valor_refe)
+		} else {
+			generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, resultado.Value) //parametro
+		}
+		generador.Mi_generador.AddExpression("P", "P", size, "+") // cambio de entorno
 		generador.Mi_generador.AddCall("funcion_string_rubencin")
+		generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
+		generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
+		return valor.Value{Value: newTemp2, Type: valor.STRING}
+	} else if resultado.Type == valor.BOOLEAN {
+		generador.Mi_generador.AddComment("momoo")
+		newLabel := generador.Mi_generador.NewLabel()
+		tmp_string := generador.Mi_generador.NewTemp()
+		//add labels
+		for _, lvl := range resultado.TrueLabel {
+			generador.Mi_generador.AddLabel(lvl.(string))
+		}
+		generador.Mi_generador.AddAssign(tmp_string, "H")
+		generador.Mi_generador.AddSetHeap("(int)H", "116")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "114")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "117")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "101")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "-1")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddGoto(newLabel)
+		//add labels
+		for _, lvl := range resultado.FalseLabel {
+			generador.Mi_generador.AddLabel(lvl.(string))
+		}
+		generador.Mi_generador.AddAssign(tmp_string, "H")
+		generador.Mi_generador.AddSetHeap("(int)H", "102")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "97")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "108")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "115")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "101")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddSetHeap("(int)H", "-1")
+		generador.Mi_generador.AddExpression("H", "H", "1", "+")
+		generador.Mi_generador.AddLabel(newLabel)
+		return valor.Value{Value: tmp_string, Type: valor.STRING}
 	} else {
 		panic("Error se esperaba una expresion strig funcion Float")
 	}
-	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
-	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
-	return valor.Value{Value: newTemp2, Type: valor.STRING}
+
 }

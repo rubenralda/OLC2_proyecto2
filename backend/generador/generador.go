@@ -422,6 +422,13 @@ func (g *Generator) Generar_funcion_string() {
 		parte_entera := g.NewTemp()
 		parte_decimal := g.NewTemp()
 		label_division := g.NewLabel()
+		label_inicio := g.NewLabel()
+		label_inicio_decimal := g.NewLabel()
+		label_decimal := g.NewLabel()
+		valor_char := g.NewTemp()
+		label_return := g.NewLabel()
+		contador_entero := g.NewTemp()
+		contado_decimal := g.NewTemp()
 		//se genera la funcion
 		g.Natives = append(g.Natives, "void funcion_string_rubencin() {\n")
 		g.Natives = append(g.Natives, "\t"+parametro+" = P + 1;\n")                  //parametro
@@ -429,10 +436,48 @@ func (g *Generator) Generar_funcion_string() {
 		g.Natives = append(g.Natives, "\tstack[(int)P] = H;\n")                      //valor de retorno
 
 		g.Natives = append(g.Natives, "\t"+parte_decimal+" = "+numero+" - (int)"+numero+";\n")
-		g.Natives = append(g.Natives, "\t"+parte_entera+" = (int)"+numero+"];\n")
+		g.Natives = append(g.Natives, "\t"+parte_entera+" = (int)"+numero+";\n")
 
 		//divir entre 10 hasta que sea menor 1 para conseguir la parte entera
+		g.Natives = append(g.Natives, "\t"+contador_entero+" = 0;\n")
 		g.Natives = append(g.Natives, "\t"+label_division+":\n")
+		g.Natives = append(g.Natives, "\tif("+parte_entera+" < 1) goto "+label_inicio+";\n")
+		g.Natives = append(g.Natives, "\t"+parte_entera+" = "+parte_entera+"/ 10;\n")
+		g.Natives = append(g.Natives, "\t"+contador_entero+" = "+contador_entero+" + 1;\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_division+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_inicio+":\n")
+		g.Natives = append(g.Natives, "\t"+parte_entera+" = "+parte_entera+"* 10;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = (int)"+parte_entera+";\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" + 48;\n")
+		g.Natives = append(g.Natives, "\theap[(int)H] = "+valor_char+";\n") //guardo el char
+		g.Natives = append(g.Natives, "\tH = H + 1;\n")                     //incremento el puntero
+		g.Natives = append(g.Natives, "\t"+parte_entera+" = "+parte_entera+" - (int)"+parte_entera+";\n")
+		g.Natives = append(g.Natives, "\tif((int)"+contador_entero+" <= 1) goto "+label_decimal+";\n")
+		g.Natives = append(g.Natives, "\t"+contador_entero+" = "+contador_entero+" - 1;\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_inicio+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_decimal+":\n")
+		g.Natives = append(g.Natives, "\tif("+parte_decimal+" == 0) goto "+label_return+";\n")
+
+		g.Natives = append(g.Natives, "\theap[(int)H] = 46;\n") //guardo el punto
+		g.Natives = append(g.Natives, "\tH = H + 1;\n")         //incremento el puntero
+		g.Natives = append(g.Natives, "\t"+contado_decimal+" = 6;\n")
+
+		g.Natives = append(g.Natives, "\t"+label_inicio_decimal+":\n")
+		g.Natives = append(g.Natives, "\t"+parte_decimal+" = "+parte_decimal+"* 10;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = (int)"+parte_decimal+";\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" + 48;\n")
+		g.Natives = append(g.Natives, "\theap[(int)H] = "+valor_char+";\n") //guardo el char
+		g.Natives = append(g.Natives, "\tH = H + 1;\n")                     //incremento el puntero
+		g.Natives = append(g.Natives, "\t"+parte_decimal+" = "+parte_decimal+" - (int)"+parte_decimal+";\n")
+		g.Natives = append(g.Natives, "\tif((int)"+contado_decimal+" <= 1) goto "+label_return+";\n")
+		g.Natives = append(g.Natives, "\t"+contado_decimal+" = "+contado_decimal+" - 1;\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_inicio_decimal+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_return+":\n")
+		g.Natives = append(g.Natives, "\theap[(int)H] = -1;\n") //guardo el fin string
+		g.Natives = append(g.Natives, "\tH = H + 1;\n")         //incremento el puntero
 		g.Natives = append(g.Natives, "\treturn;\n")
 		g.Natives = append(g.Natives, "}\n\n")
 		g.Is_string_print = false
