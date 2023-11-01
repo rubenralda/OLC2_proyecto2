@@ -850,6 +850,8 @@ func main() {
 	generador.Mi_generador.MainCode = true
 	generador.Mi_generador.PrintStringFlag = true
 	generador.Mi_generador.Is_int_print = true
+	generador.Mi_generador.Is_float_print = true
+	generador.Mi_generador.Is_string_print = true
 	fichero, err := antlr.NewFileStream("prueba.swift")
 	if err != nil {
 		fmt.Println("No se pudo abrir el archivo")

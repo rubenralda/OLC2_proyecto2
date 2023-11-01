@@ -49,7 +49,9 @@ duplicar(&numero1)
 print("numero2:", numero1)
 
 print("");
+let num3 = Float("9.5")
+let num4 = Float("3.6")
 let num1 = Int("20")
-let num2 = Int("20.15")
+let num2 = Int("20")
 
-print(num1, num2)
+print(num3, num4)

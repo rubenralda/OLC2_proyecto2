@@ -18,10 +18,12 @@ func (i Funcion_print) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
 	for _, expresion := range i.Lista_expresion {
 		result = expresion.Ejecutar(ambito_padre)
-		if result.Type == valor.INTEGER || result.Type == valor.FLOAT {
+		if result.Type == valor.INTEGER {
 			generador.Mi_generador.AddPrintf("d", "(int)"+fmt.Sprintf("%v", result.Value))
 			generador.Mi_generador.AddPrintf("c", "32")
-			generador.Mi_generador.AddBr()
+		} else if result.Type == valor.FLOAT {
+			generador.Mi_generador.AddPrintf("f", fmt.Sprintf("%v", result.Value))
+			generador.Mi_generador.AddPrintf("c", "32")
 		} else if result.Type == valor.CHAR {
 			generador.Mi_generador.AddPrintf("c", "(char)"+result.Value)
 			generador.Mi_generador.AddPrintf("c", "32")
@@ -116,7 +118,32 @@ type Funcion_float struct {
 }
 
 func (f Funcion_float) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	return valor.Value{}
+	resultado := f.Expresion.Ejecutar(ambito_padre)
+	//llamar a generar printstring
+	generador.Mi_generador.Generar_funcion_float()
+	//agregar codigo en el main
+	posicion_parametro := generador.Mi_generador.NewTemp()
+	newTemp2 := generador.Mi_generador.NewTemp()
+	size := strconv.Itoa(ambito_padre.Size)
+	generador.Mi_generador.AddExpression(posicion_parametro, "P", size, "+")               //nuevo temporal en pos vacia
+	generador.Mi_generador.AddExpression(posicion_parametro, posicion_parametro, "1", "+") //se deja espacio de retorno
+
+	if resultado.Referencia != "" {
+		valor_refe := generador.Mi_generador.NewTemp()
+		generador.Mi_generador.AddGetStack(valor_refe, "(int)"+resultado.Referencia)
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, valor_refe)
+	} else {
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, resultado.Value) //parametro
+	}
+	generador.Mi_generador.AddExpression("P", "P", size, "+") // cambio de entorno
+	if resultado.Type == valor.STRING {
+		generador.Mi_generador.AddCall("funcion_float_rubencin")
+	} else {
+		panic("Error se esperaba una expresion strig funcion Float")
+	}
+	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
+	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
+	return valor.Value{Value: newTemp2, Type: valor.FLOAT}
 }
 
 type Funcion_string struct {
@@ -124,5 +151,30 @@ type Funcion_string struct {
 }
 
 func (f Funcion_string) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	return valor.Value{}
+	resultado := f.Expresion.Ejecutar(ambito_padre)
+	//llamar a generar printstring
+	generador.Mi_generador.Generar_funcion_string()
+	//agregar codigo en el main
+	posicion_parametro := generador.Mi_generador.NewTemp()
+	newTemp2 := generador.Mi_generador.NewTemp()
+	size := strconv.Itoa(ambito_padre.Size)
+	generador.Mi_generador.AddExpression(posicion_parametro, "P", size, "+")               //nuevo temporal en pos vacia
+	generador.Mi_generador.AddExpression(posicion_parametro, posicion_parametro, "1", "+") //se deja espacio de retorno
+
+	if resultado.Referencia != "" {
+		valor_refe := generador.Mi_generador.NewTemp()
+		generador.Mi_generador.AddGetStack(valor_refe, "(int)"+resultado.Referencia)
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, valor_refe)
+	} else {
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, resultado.Value) //parametro
+	}
+	generador.Mi_generador.AddExpression("P", "P", size, "+") // cambio de entorno
+	if resultado.Type == valor.FLOAT || resultado.Type == valor.INTEGER {
+		generador.Mi_generador.AddCall("funcion_string_rubencin")
+	} else {
+		panic("Error se esperaba una expresion strig funcion Float")
+	}
+	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
+	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
+	return valor.Value{Value: newTemp2, Type: valor.STRING}
 }

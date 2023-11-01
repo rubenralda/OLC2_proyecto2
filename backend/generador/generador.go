@@ -14,6 +14,8 @@ type Generator struct {
 	TempList        []interface{}
 	PrintStringFlag bool
 	Is_int_print    bool //si ya fue agregada la funcion
+	Is_float_print  bool
+	Is_string_print bool
 	MainCode        bool
 }
 
@@ -318,5 +320,121 @@ func (g *Generator) Generar_funcion_int() {
 		g.Natives = append(g.Natives, "\treturn;\n")
 		g.Natives = append(g.Natives, "}\n\n")
 		g.Is_int_print = false
+	}
+}
+
+func (g *Generator) Generar_funcion_float() {
+	if g.Is_float_print {
+		//generando temporales y etiquetas
+		newTemp1 := g.NewTemp()
+		valor_char := g.NewTemp()
+		label_salida := g.NewLabel()
+		label_inicio := g.NewLabel()
+		label_punto := g.NewLabel()
+		label_fin_cadena := g.NewLabel()
+		label_preparativos := g.NewLabel()
+		label_preparativos1 := g.NewLabel()
+		label_preparativos2 := g.NewLabel()
+		puntero_heap := g.NewTemp()
+		numero := g.NewTemp()
+		multiplicador := g.NewTemp()
+		copia_puntero_heap := g.NewTemp()
+		label_decimal := g.NewTemp()
+		puntero_original := g.NewTemp()
+		label_error := g.NewLabel()
+		//funcion
+		g.Natives = append(g.Natives, "void funcion_float_rubencin() {\n")
+		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = stack[(int)"+newTemp1+"];\n") //puntero heap string
+		g.Natives = append(g.Natives, "\t"+puntero_original+" = "+puntero_heap+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_fin_cadena+":\n") //inicio ciclo
+		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+puntero_heap+"];\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == -1) goto "+label_preparativos2+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == 46) goto "+label_preparativos1+";\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" + 1;\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_fin_cadena+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_preparativos1+":\n")
+		g.Natives = append(g.Natives, "\t"+copia_puntero_heap+" = "+puntero_heap+" + 1;\n") //copia puntero heap string
+		g.Natives = append(g.Natives, "\tgoto "+label_preparativos+";\n")
+		g.Natives = append(g.Natives, "\t"+label_preparativos2+":\n")
+		g.Natives = append(g.Natives, "\t"+copia_puntero_heap+" = "+puntero_heap+";\n") //copia -1
+
+		g.Natives = append(g.Natives, "\t"+label_preparativos+":\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" - 1;\n") //lo muevo antes del punto o -1
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = 1;\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = 0;\n")
+
+		//parte entera
+		g.Natives = append(g.Natives, "\t"+label_inicio+":\n") //inicio ciclo
+		g.Natives = append(g.Natives, "\tif("+puntero_heap+" < "+puntero_original+") goto "+label_punto+";\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+puntero_heap+"];\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" < 48) goto "+label_error+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" > 57) goto "+label_error+";\n")
+
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" - 1;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" - 48;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" * "+multiplicador+";\n")
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = "+multiplicador+" * 10;\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = "+numero+" + "+valor_char+";\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_inicio+";\n")
+
+		//preparativos
+		g.Natives = append(g.Natives, "\t"+label_punto+":\n")
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = 10;\n")
+		//parte decimal
+		g.Natives = append(g.Natives, "\t"+label_decimal+":\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+copia_puntero_heap+"];\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == -1) goto "+label_salida+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" < 48) goto "+label_error+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" > 57) goto "+label_error+";\n")
+
+		g.Natives = append(g.Natives, "\t"+copia_puntero_heap+" = "+copia_puntero_heap+" + 1;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" - 48;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" / "+multiplicador+";\n")
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = "+multiplicador+" * 10;\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = "+numero+" + "+valor_char+";\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_decimal+";\n")
+
+		//si no es punto error y retorno cero
+		g.Natives = append(g.Natives, "\t"+label_error+":\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 69);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 79);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = 0;\n")
+
+		g.Natives = append(g.Natives, "\t"+label_salida+":\n")
+		g.Natives = append(g.Natives, "\tstack[(int)P] = "+numero+";\n") //valor de retorno
+		g.Natives = append(g.Natives, "\treturn;\n")
+		g.Natives = append(g.Natives, "}\n\n")
+		g.Is_float_print = false
+	}
+}
+
+func (g *Generator) Generar_funcion_string() {
+	if g.Is_string_print {
+		//generando temporales y etiquetas
+		parametro := g.NewTemp()
+		numero := g.NewTemp()
+		parte_entera := g.NewTemp()
+		parte_decimal := g.NewTemp()
+		label_division := g.NewLabel()
+		//se genera la funcion
+		g.Natives = append(g.Natives, "void funcion_string_rubencin() {\n")
+		g.Natives = append(g.Natives, "\t"+parametro+" = P + 1;\n")                  //parametro
+		g.Natives = append(g.Natives, "\t"+numero+" = stack[(int)"+parametro+"];\n") //valor float
+		g.Natives = append(g.Natives, "\tstack[(int)P] = H;\n")                      //valor de retorno
+
+		g.Natives = append(g.Natives, "\t"+parte_decimal+" = "+numero+" - (int)"+numero+";\n")
+		g.Natives = append(g.Natives, "\t"+parte_entera+" = (int)"+numero+"];\n")
+
+		//divir entre 10 hasta que sea menor 1 para conseguir la parte entera
+		g.Natives = append(g.Natives, "\t"+label_division+":\n")
+		g.Natives = append(g.Natives, "\treturn;\n")
+		g.Natives = append(g.Natives, "}\n\n")
+		g.Is_string_print = false
 	}
 }
