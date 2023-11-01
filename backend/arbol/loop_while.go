@@ -13,7 +13,6 @@ type Loop_while struct {
 }
 
 func (s Loop_while) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	generador.Mi_generador.AddComment("while quiero ver el 0 &&&")
 	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia while", Padre: ambito_padre}
 	ambito_local.Is_ciclo = true
 	ambito_padre.AgregarAmbito(ambito_local)

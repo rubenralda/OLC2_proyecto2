@@ -49,3 +49,7 @@ duplicar(&numero1)
 print("numero2:", numero1)
 
 print("");
+let num1 = Int("20")
+let num2 = Int("20.15")
+
+print(num1, num2)

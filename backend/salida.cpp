@@ -5,7 +5,7 @@ double heap[30101999];
 double stack[30101999];
 double P;
 double H;
-double t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43, t44, t45, t46, t47, t48, t49, t50, t51, t52, t53, t54, t55, t56, t57, t58, t59, t60, t61, t62, t63, t64, t65, t66, t67, t68, t69, t70, t71, t72, t73, t74, t75, t76, t77, t78, t79, t80, t81, t82, t83, t84, t85, t86, t87, t88, t89, t90, t91, t92, t93, t94, t95, t96, t97, t98, t99, t100, t101;
+double t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11, t12, t13, t14, t15, t16, t17, t18, t19, t20, t21, t22, t23, t24, t25, t26, t27, t28, t29, t30, t31, t32, t33, t34, t35, t36, t37, t38, t39, t40, t41, t42, t43, t44, t45, t46, t47, t48, t49, t50, t51, t52, t53, t54, t55, t56, t57, t58, t59, t60, t61, t62, t63, t64, t65, t66, t67, t68, t69, t70, t71, t72, t73, t74, t75, t76, t77, t78, t79, t80, t81, t82, t83, t84, t85, t86, t87, t88, t89, t90, t91, t92, t93, t94, t95, t96, t97, t98, t99, t100, t101, t102, t103, t104, t105, t106, t107, t108, t109, t110, t111, t112, t113, t114, t115, t116, t117, t118, t119, t120, t121;
 
 /*------NATIVES------*/
 void dbrust_printString() {
@@ -18,6 +18,51 @@ void dbrust_printString() {
 	t2 = t2 + 1;
 	goto L1;
 	L0:
+	return;
+}
+
+void funcion_int_float_rubencin() {
+	t104 = P + 1;
+	t105 = stack[(int)t104];
+	t105 = (int)t105;
+	stack[(int)P] = t105;
+	return;
+}
+
+void funcion_int_string_rubencin() {
+	t104 = P + 1;
+	t107 = stack[(int)t104];
+	L11:
+	t106 = heap[(int)t107];
+	if(t106 == -1) goto L12;
+	if(t106 == 46) goto L12;
+	t107 = t107 + 1;
+	goto L11;
+	L12:
+	t107 = t107 - 1;
+	t109 = 1;
+	t108 = 0;
+	L9:
+	t106 = heap[(int)t107];
+	if(t106 == -1) goto L8;
+	t107 = t107 - 1;
+	if(t106 < 48) goto L10;
+	if(t106 > 57) goto L10;
+	t106 = t106 - 48;
+	t106 = t106 * t109;
+	t109 = t109 * 10;
+	t108 = t108 + t106;
+	goto L9;
+	L10:
+	if(t106 == 46) goto L8;
+	printf("%c", (char) 69);
+	printf("%c", (char) 82);
+	printf("%c", (char) 82);
+	printf("%c", (char) 79);
+	printf("%c", (char) 82);
+	t108 = 0;
+	L8:
+	stack[(int)P] = t108;
 	return;
 }
 
@@ -658,6 +703,61 @@ int main() {
 	dbrust_printString();
 	t101 = stack[(int)P];
 	P = P - 4;
+	printf("%c", 32);
+	
+	printf("%c", 10);
+	t103 = H;
+	heap[(int)H] = 50;
+	H = H + 1;
+	heap[(int)H] = 48;
+	H = H + 1;
+	heap[(int)H] = -1;
+	H = H + 1;
+	
+	t110 = P + 4;
+	t110 = t110 + 1;
+	stack[(int)t110] = t103;
+	P = P + 4;
+	funcion_int_string_rubencin();
+	t111 = stack[(int)P];
+	P = P - 4;
+	t102 = P + 4;
+	stack[(int)t102] = t111;
+	
+	t113 = H;
+	heap[(int)H] = 50;
+	H = H + 1;
+	heap[(int)H] = 48;
+	H = H + 1;
+	heap[(int)H] = 46;
+	H = H + 1;
+	heap[(int)H] = 49;
+	H = H + 1;
+	heap[(int)H] = 53;
+	H = H + 1;
+	heap[(int)H] = -1;
+	H = H + 1;
+	
+	t114 = P + 5;
+	t114 = t114 + 1;
+	stack[(int)t114] = t113;
+	P = P + 5;
+	funcion_int_string_rubencin();
+	t115 = stack[(int)P];
+	P = P - 5;
+	t112 = P + 5;
+	stack[(int)t112] = t115;
+	
+	t118 = P - 0;
+	t116 = t118 + 4;
+	t117 = stack[(int)t116];
+	printf("%d", (int)t117);
+	printf("%c", 32);
+	
+	t121 = P - 0;
+	t119 = t121 + 5;
+	t120 = stack[(int)t119];
+	printf("%d", (int)t120);
 	printf("%c", 32);
 	
 	printf("%c", 10);

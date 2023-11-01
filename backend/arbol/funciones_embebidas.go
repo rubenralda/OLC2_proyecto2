@@ -81,7 +81,34 @@ type Funcion_int struct {
 }
 
 func (f Funcion_int) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	return valor.Value{}
+	resultado := f.Expresion.Ejecutar(ambito_padre)
+	//llamar a generar printstring
+	generador.Mi_generador.Generar_funcion_int()
+	//agregar codigo en el main
+	posicion_parametro := generador.Mi_generador.NewTemp()
+	newTemp2 := generador.Mi_generador.NewTemp()
+	size := strconv.Itoa(ambito_padre.Size)
+	generador.Mi_generador.AddExpression(posicion_parametro, "P", size, "+")               //nuevo temporal en pos vacia
+	generador.Mi_generador.AddExpression(posicion_parametro, posicion_parametro, "1", "+") //se deja espacio de retorno
+
+	if resultado.Referencia != "" {
+		valor_refe := generador.Mi_generador.NewTemp()
+		generador.Mi_generador.AddGetStack(valor_refe, "(int)"+resultado.Referencia)
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, valor_refe)
+	} else {
+		generador.Mi_generador.AddSetStack("(int)"+posicion_parametro, resultado.Value) //parametro
+	}
+	generador.Mi_generador.AddExpression("P", "P", size, "+") // cambio de entorno
+	if resultado.Type == valor.FLOAT || resultado.Type == valor.INTEGER {
+		generador.Mi_generador.AddCall("funcion_int_float_rubencin")
+	} else if resultado.Type == valor.STRING {
+		generador.Mi_generador.AddCall("funcion_int_string_rubencin")
+	} else {
+		panic("Error se esperaba una expresion float o strig funcion Int")
+	}
+	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
+	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
+	return valor.Value{Value: newTemp2, Type: valor.INTEGER}
 }
 
 type Funcion_float struct {

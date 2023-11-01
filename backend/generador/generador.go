@@ -13,6 +13,7 @@ type Generator struct {
 	FuncCode        []interface{}
 	TempList        []interface{}
 	PrintStringFlag bool
+	Is_int_print    bool //si ya fue agregada la funcion
 	MainCode        bool
 }
 
@@ -248,5 +249,74 @@ func (g *Generator) GeneratePrintString() {
 		g.Natives = append(g.Natives, "\treturn;\n")
 		g.Natives = append(g.Natives, "}\n\n")
 		g.PrintStringFlag = false
+	}
+}
+
+func (g *Generator) Generar_funcion_int() {
+	if g.Is_int_print {
+		//generando temporales y etiquetas
+		newTemp1 := g.NewTemp()
+		newTemp2 := g.NewTemp()
+		valor_char := g.NewTemp()
+		label_salida := g.NewLabel()
+		label_inicio := g.NewLabel()
+		label_punto := g.NewLabel()
+		label_fin_cadena := g.NewLabel()
+		label_preparativos := g.NewLabel()
+		puntero_heap := g.NewTemp()
+		numero := g.NewTemp()
+		multiplicador := g.NewTemp()
+		//se genera la funcion
+		g.Natives = append(g.Natives, "void funcion_int_float_rubencin() {\n")
+		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
+		g.Natives = append(g.Natives, "\t"+newTemp2+" = stack[(int)"+newTemp1+"];\n") //valor float
+		g.Natives = append(g.Natives, "\t"+newTemp2+" = (int)"+newTemp2+";\n")
+		g.Natives = append(g.Natives, "\tstack[(int)P] = "+newTemp2+";\n") //valor de retorno
+		g.Natives = append(g.Natives, "\treturn;\n")
+		g.Natives = append(g.Natives, "}\n\n")
+		//funcion int para string
+		g.Natives = append(g.Natives, "void funcion_int_string_rubencin() {\n")
+		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = stack[(int)"+newTemp1+"];\n") //puntero heap string
+		g.Natives = append(g.Natives, "\t"+label_fin_cadena+":\n")                        //inicio ciclo
+		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+puntero_heap+"];\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == -1) goto "+label_preparativos+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == 46) goto "+label_preparativos+";\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" + 1;\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_fin_cadena+";\n")
+		g.Natives = append(g.Natives, "\t"+label_preparativos+":\n")
+
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" - 1;\n")
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = 1;\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = 0;\n")
+
+		g.Natives = append(g.Natives, "\t"+label_inicio+":\n") //inicio ciclo
+		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+puntero_heap+"];\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == -1) goto "+label_salida+";\n")
+		g.Natives = append(g.Natives, "\t"+puntero_heap+" = "+puntero_heap+" - 1;\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" < 48) goto "+label_punto+";\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" > 57) goto "+label_punto+";\n")
+
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" - 48;\n")
+		g.Natives = append(g.Natives, "\t"+valor_char+" = "+valor_char+" * "+multiplicador+";\n")
+		g.Natives = append(g.Natives, "\t"+multiplicador+" = "+multiplicador+" * 10;\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = "+numero+" + "+valor_char+";\n")
+		g.Natives = append(g.Natives, "\tgoto "+label_inicio+";\n")
+
+		g.Natives = append(g.Natives, "\t"+label_punto+":\n")
+		g.Natives = append(g.Natives, "\tif("+valor_char+" == 46) goto "+label_salida+";\n")
+		//si no es punto error y retorno cero
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 69);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 79);\n")
+		g.Natives = append(g.Natives, "\tprintf(\"%c\", (char) 82);\n")
+		g.Natives = append(g.Natives, "\t"+numero+" = 0;\n")
+
+		g.Natives = append(g.Natives, "\t"+label_salida+":\n")
+		g.Natives = append(g.Natives, "\tstack[(int)P] = "+numero+";\n") //valor de retorno
+		g.Natives = append(g.Natives, "\treturn;\n")
+		g.Natives = append(g.Natives, "}\n\n")
+		g.Is_int_print = false
 	}
 }
