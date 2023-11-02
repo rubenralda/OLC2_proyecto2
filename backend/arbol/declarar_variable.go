@@ -27,7 +27,11 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		if d.Tipo != "" {
 			variable.Tipo = Tipo_variable[d.Tipo]
 			if variable.Tipo == valor.NULL {
-				//buscar el struct y darle el tipo falta
+				//buscar el struct
+				estruct, _ := ambito_padre.Buscar_struct(d.Id)
+				if estruct == nil {
+					panic("El struct no esta definido " + d.Id)
+				}
 				variable.Tipo_struct = d.Tipo
 				variable.Is_instancia = true
 			}

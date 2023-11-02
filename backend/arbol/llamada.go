@@ -16,6 +16,10 @@ type Llamada_funcion struct {
 func (l Llamada_funcion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	funcion, _ := ambito_padre.Buscar_funcion(l.Id)
 	if funcion == nil {
+		// esto porque la declaracion de struct y la llamada tienen la misma sintaxis
+		if estruct, _ := ambito_padre.Buscar_struct(l.Id); estruct != nil {
+			return l.Declarar_objeto_amb.Ejecutar(ambito_padre)
+		}
 		panic("La funcion no existe " + l.Id)
 	}
 	if len(l.Lista_argumentos) != len(funcion.Parametros) {

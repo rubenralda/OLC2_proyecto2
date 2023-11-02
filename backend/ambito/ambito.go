@@ -2,25 +2,6 @@ package ambito
 
 import "main/valor"
 
-type Objeto_struct struct {
-	Ambito_struct *Ambito
-}
-
-type Identificadores struct {
-	Id                string              // tambien nombre interno de una funcion
-	Primitivo         valor.TipoExpresion // String, Int, Bool, Float, char, (Nombre_struct)
-	Posicion_relativa int                 // uso: p + posicion_relativa
-	//Tipo              TipoVariable        //variable, constante, vector, funcion, struct, matriz y parametro
-	Is_init bool // Si fue declarada con un valor o no
-
-	Objeto       Objeto_struct // el objeto para el tipo struct
-	Lista_vector []interface{} // array de datos para el tipo vector
-	// parte de funciones
-	Funcion       interface{}      // En realidad es arbol.Ejecutar_funcion pero recursividad indirecta de modulos
-	Referencia    valor.Value      // true si es por referencia, tambien mutable o inmutable
-	Puntero_valor *Identificadores // tiene un objeto identificadores que puede modificar
-}
-
 type Variables struct {
 	Id                string              //nombre de la variable
 	Posicion_relativa int                 //uso: p + posicion_relativa
@@ -46,12 +27,31 @@ type Funciones struct {
 	Parametros []Parametros
 }
 
+type Estruct struct {
+	Nombre    string       //es decir el tipo
+	Atributos []*Variables //posicion relativa no se usa
+}
+
+func (a *Estruct) AgregarVariable(atributo Variables) {
+	a.Atributos = append(a.Atributos, &atributo)
+}
+
+func (a *Estruct) Buscar_atributo(nombre string) (*Variables, int) {
+	for i, atributo := range a.Atributos {
+		if atributo.Id == nombre {
+			return atributo, i
+		}
+	}
+	return nil, 0
+}
+
 type Ambito struct {
 	NombreAmbito string
 	Padre        *Ambito
 	AmbitosHijos []*Ambito
 	Variables    []*Variables
 	Funciones    []*Funciones
+	Estructs     []*Estruct
 	Size         int
 
 	//para llamadas
@@ -67,6 +67,10 @@ type Ambito struct {
 
 func (a *Ambito) AgregarFuncion(funcion *Funciones) {
 	a.Funciones = append(a.Funciones, funcion)
+}
+
+func (a *Ambito) Agregar_struct(estruct *Estruct) {
+	a.Estructs = append(a.Estructs, estruct)
 }
 
 func (a *Ambito) AgregarVariable(variable Variables) {
@@ -156,6 +160,29 @@ func (a *Ambito) Buscar_funcion(id string) (*Funciones, int) {
 	size := 0
 	for {
 		for _, value := range anterior.Funciones {
+			if value.Nombre == id {
+				elemento = value
+			}
+		}
+		if elemento != nil {
+			break
+		}
+		anterior = anterior.Padre
+		if anterior != nil {
+			size += anterior.Size
+		} else {
+			break
+		}
+	}
+	return elemento, size
+}
+
+func (a *Ambito) Buscar_struct(id string) (*Estruct, int) {
+	anterior := a
+	var elemento *Estruct
+	size := 0
+	for {
+		for _, value := range anterior.Estructs {
 			if value.Nombre == id {
 				elemento = value
 			}

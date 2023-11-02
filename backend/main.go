@@ -507,9 +507,9 @@ func (v *parser_visitor) VisitFuncion_string(ctx *parser.Funcion_stringContext) 
 // METODOS PARA DECLARAR STRUCTS
 
 func (v *parser_visitor) VisitStruct_declaracion(ctx *parser.Struct_declaracionContext) interface{} {
-	var atributos []arbol.BaseNodo
+	var atributos []arbol.Declaracion_atributo
 	for _, item := range ctx.AllLista_atributos() {
-		atributos = append(atributos, item.Accept(v).(arbol.BaseNodo))
+		atributos = append(atributos, item.Accept(v).(arbol.Declaracion_atributo))
 	}
 	return arbol.Declarar_struct{Id: ctx.Identificador().GetText(), Atributos: atributos}
 }

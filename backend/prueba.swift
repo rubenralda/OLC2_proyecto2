@@ -1,88 +1,69 @@
 print("--------------------------");
-print("---FUNCIONES EMBEBIDAS----");
-print("----------14 pts----------");
+print("----------STRUCT----------");
+print("----------12 pts----------");
 print("--------------------------");
 
-print("");
-func suma(_ numero1: Int, _ numero2: Int) -> Int {
-    let resultado = numero1 + numero2
-    return resultado
+print(" ")
+print("=============================================")
+print("================DEFINICIÓN===================")
+print("=============================================")
+
+struct StructArr {
+    var datos: Float
 }
 
-let resultado = suma(5, 3)
-print("La suma es: ", resultado)
-
-print("");
-func saludo3() {
-    print("saludos!")
+struct CentroTuristico {
+    var nombre: String
 }
 
-func saludo2() {
-    print("mundo")
-    saludo3()
+struct Carro {
+    var placa: String
+    var color: String
+    var tipo: String
 }
 
-func saludo1() {
-    print("hola")
-    saludo2()
+struct Personaje {
+    var nombre: String
+    var edad: Int
+    var descripcion: String
+    var carro: Carro
+    var numeros: StructArr
 }
 
-saludo1()
+print(" ")
+print("=============================================")
+print("==============INSTANCIACIÓN==================")
+print("=============================================")
 
-print("");
-func ejemplo2(verdura v: Int, v verdura: Int ) {
-    print(v)
-    print(verdura)
-}
+let centro1 = CentroTuristico(nombre: "Volcan de pacaya")
+let centro2 = CentroTuristico(nombre: "Rio dulce")
+let centro3 = CentroTuristico(nombre: "Laguna Luchoa")
+let centro4 = CentroTuristico(nombre: "Playa Blanca")
+let centro5 = CentroTuristico(nombre: "Antigua Guatemala")
+let centro6 = CentroTuristico(nombre: "Lago de Atitlan")
+let newCarro = Carro(placa: "090PLO", color: "gris", tipo: "mecanico")
+var nums = StructArr(datos: 0.0)
 
-let precio1: Int = 251
-let precio2: Int = 85
-ejemplo2(verdura: precio1, v: precio2)
+var p1 = Personaje(
+    nombre: "Jose",
+    edad: 18,
+    descripcion: "No hace nada",
+    carro: newCarro,
+    numeros: nums
+)
 
-print("");
-func duplicar(_ x: inout Int){
-    x += x
-}
+var nums2 = StructArr(datos: Float("23.43"))
 
-var numero1 = 1
-duplicar(&numero1)
-print("numero2:", numero1)
+print(" ")
+print("=============================================")
+print("========ASIGNACIÓN Y ACCESO==================")
+print("=============================================")
 
-print("");
-let num3 = Float("9.5")
-let num4 = Float("3.6")
-let num1 = Int("20")
-let num2 = Int("20")
-let suma = String(num1 + num2)
-let resta = String(num3 - num4)
-let cadena = String(true) + "->" + String(3.504)
+print("El nombre del Centro turistico 1 es: ", centro1.nombre)
+print("El nombre del Centro turistico 2 es: ", centro2.nombre)
+print("El nombre del Centro turistico 3 es: ", centro3.nombre)
+print("El nombre del Centro turistico 4 es: ", centro4.nombre)
+print("El nombre del Centro turistico 5 es: ", centro5.nombre)
+print("El nombre del Centro turistico 6 es: ", centro6.nombre)
 
-print("valor true: ", String(true))
-print("valor false: ", String(false))
-print("valor 1: ", suma)
-print("valor 2: ", resta)
-print("valor cadena: ", cadena);
-
-/*
---------------------------
----FUNCIONES EMBEBIDAS----
-----------14 pts----------
---------------------------
-
-La suma es:  8
-
-hola
-mundo
-saludos!
-
-251
-85
-
-numero2: 2
-
-valor true:  true
-valor false:  false
-valor 1:  40
-valor 2:  5.9
-valor cadena:  true->3.504
-*/
+print("Persona nombre: ", p1.nombre, ", edad: ", p1.edad, ", carroTipo: ", p1.carro.tipo, ", numeros: ", p1.numeros.datos)
