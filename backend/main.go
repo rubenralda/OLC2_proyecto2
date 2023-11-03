@@ -11,6 +11,7 @@ import (
 	"main/valor"
 	"os"
 	"os/exec"
+	"strconv"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/gofiber/fiber/v2"
@@ -732,8 +733,9 @@ func (v *parser_visitor) VisitTipo_matriz(ctx *parser.Tipo_matrizContext) interf
 func (v *parser_visitor) VisitDefinicion_matriz(ctx *parser.Definicion_matrizContext) interface{} {
 	if ctx.Lista_valores_matriz() != nil {
 		return ctx.Lista_valores_matriz().Accept(v)
+	} else {
+		return ctx.Simple_matriz().Accept(v)
 	}
-	return nil
 }
 
 func (v *parser_visitor) VisitLista_valores_matriz(ctx *parser.Lista_valores_matrizContext) interface{} {
@@ -754,6 +756,25 @@ func (v *parser_visitor) VisitElementos_matriz(ctx *parser.Elementos_matrizConte
 		lista1 = append(lista1, elementCtx.Accept(v))
 	}
 	return lista1
+}
+
+func (v *parser_visitor) VisitDefinicion_matriz_expresion(ctx *parser.Definicion_matriz_expresionContext) interface{} {
+	var lista []interface{}
+	count, _ := strconv.Atoi(ctx.Int().GetText()) //no puede fallar porque viene de una ER
+	expresion := ctx.Expresion().Accept(v)
+	for i := 0; i < count; i++ {
+		lista = append(lista, expresion)
+	}
+	return lista
+}
+func (v *parser_visitor) VisitDefinicion_matriz_padre(ctx *parser.Definicion_matriz_padreContext) interface{} {
+	var lista []interface{}
+	count, _ := strconv.Atoi(ctx.Int().GetText()) //no puede fallar porque viene de una ER
+	expresion := ctx.Simple_matriz().Accept(v).([]interface{})
+	for i := 0; i < count; i++ {
+		lista = append(lista, expresion)
+	}
+	return lista
 }
 
 // EJECUCION DEL MAIN Y LA API
@@ -779,6 +800,11 @@ func handleVisitor(c *fiber.Ctx) error {
 	*/
 	mi_generador := generador.Generator{}
 	generador.Mi_generador = &mi_generador
+	generador.Mi_generador.MainCode = true
+	generador.Mi_generador.PrintStringFlag = true
+	generador.Mi_generador.Is_int_print = true
+	generador.Mi_generador.Is_float_print = true
+	generador.Mi_generador.Is_string_print = true
 	var message Message
 	if err := c.BodyParser(&message); err != nil {
 		return err
@@ -791,17 +817,23 @@ func handleVisitor(c *fiber.Ctx) error {
 	p.BuildParseTrees = true
 	visitor := parser_visitor{}
 	resultado := visitor.Visit(p.Inicio()).([]arbol.BaseNodo)
-	ambito_global := &ambito.Ambito{NombreAmbito: "global"}
+	ambito_global := &ambito.Ambito{NombreAmbito: "Global"}
+	ambito.Ambito_global = ambito_global
 	for _, linea := range resultado {
 		linea.Ejecutar(ambito_global)
 	}
 	for _, local := range ambito_global.Variables {
 		fmt.Println(local)
 	}
+	generador.Mi_generador.GenerateFinalCode()
+	codigo_final := ""
+	for _, item := range generador.Mi_generador.GetFinalCode() {
+		codigo_final += item.(string)
+	}
 	response := Resp{
-		Salida:  "salida",
+		Salida:  codigo_final,
 		Err:     false,
-		Message: "<3 Ejecución realizada con éxito <3",
+		Message: "Ejecucion realizada",
 	}
 	return c.Status(fiber.StatusOK).JSON(response)
 }
@@ -838,52 +870,20 @@ func reporte(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
+func tabla_simbolos(c *fiber.Ctx) error {
+	response := Resp{
+		Salida:  ambito.Generar_reporte_tabla_simbolos(ambito.Ambito_global),
+		Err:     false,
+		Message: "Ejecución realizada con éxito",
+	}
+	return c.Status(fiber.StatusOK).JSON(response)
+}
+
 func main() {
 	app := fiber.New()
 	app.Use(cors.New())
 	app.Post("/ejecutar", handleVisitor)
 	app.Post("/reporte", reporte)
-	//app.Listen(":3000")
-
-	mi_generador := generador.Generator{}
-	generador.Mi_generador = &mi_generador
-	generador.Mi_generador.MainCode = true
-	generador.Mi_generador.PrintStringFlag = true
-	generador.Mi_generador.Is_int_print = true
-	generador.Mi_generador.Is_float_print = true
-	generador.Mi_generador.Is_string_print = true
-	fichero, err := antlr.NewFileStream("prueba.swift")
-	if err != nil {
-		fmt.Println("No se pudo abrir el archivo")
-	}
-	lexer := parser.NewT_swiftLexer(fichero)
-	tokens := antlr.NewCommonTokenStream(lexer, 0)
-	p := parser.NewT_swiftParser(tokens)
-	p.BuildParseTrees = true
-	visitor := parser_visitor{}
-	resultado := visitor.Visit(p.Inicio()).([]arbol.BaseNodo)
-	ambito_global := &ambito.Ambito{NombreAmbito: "global"}
-	ambito.Ambito_global = ambito_global
-	for _, linea := range resultado {
-		linea.Ejecutar(ambito_global)
-	}
-	for _, local := range ambito_global.Variables {
-		fmt.Println(local)
-	}
-	generador.Mi_generador.GenerateFinalCode()
-	codigo_final := ""
-	for _, item := range generador.Mi_generador.GetFinalCode() {
-		codigo_final += item.(string)
-	}
-	archivoc, err := os.Create("salida.cpp")
-	if err != nil {
-		fmt.Println("No se pudo crear el archivo", err)
-		return
-	}
-	defer archivoc.Close()
-	_, err = archivoc.WriteString(codigo_final)
-	if err != nil {
-		fmt.Println("Error al escribir", err)
-		return
-	}
+	app.Get("/tablaSimbolos", tabla_simbolos)
+	app.Listen(":3000")
 }

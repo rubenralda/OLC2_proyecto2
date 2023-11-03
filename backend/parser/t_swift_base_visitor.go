@@ -1,6 +1,7 @@
-// Code generated from .\parser\T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
+// Code generated from ./parser/T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package parser // T_swift
+
 import "github.com/antlr4-go/antlr/v4"
 
 type BaseT_swiftVisitor struct {
@@ -159,7 +160,11 @@ func (v *BaseT_swiftVisitor) VisitElemento_matriz(ctx *Elemento_matrizContext) i
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseT_swiftVisitor) VisitSimple_matriz(ctx *Simple_matrizContext) interface{} {
+func (v *BaseT_swiftVisitor) VisitDefinicion_matriz_padre(ctx *Definicion_matriz_padreContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseT_swiftVisitor) VisitDefinicion_matriz_expresion(ctx *Definicion_matriz_expresionContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

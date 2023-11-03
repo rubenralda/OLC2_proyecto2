@@ -182,8 +182,8 @@ elementos_matriz: elemento_matriz (',' elemento_matriz)*;
 elemento_matriz: lista_valores_matriz | expresion;
 
 simple_matriz
-    : tipo_matriz '(' 'repeating' ':' simple_matriz ',' 'count' ':' Int ')'
-    | tipo_matriz '(' 'repeating' ':' expresion ',' 'count' ':' Int ')'
+    : tipo_matriz '(' 'repeating' ':' simple_matriz ',' 'count' ':' Int ')' #definicion_matriz_padre
+    | tipo_matriz '(' 'repeating' ':' expresion ',' 'count' ':' Int ')' #definicion_matriz_expresion
     ;
 
 // GRAMMAR OF A FOR_IN STATEMENT

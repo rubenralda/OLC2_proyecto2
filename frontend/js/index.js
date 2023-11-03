@@ -3,7 +3,6 @@ const btnEjecutar = document.getElementById("btn");
 const codigo = document.getElementById("codigo");//textarea
 const lineNumbersConsole = document.querySelector('.line-numbers-consola')
 const consola = document.getElementById("textConsola");//textarea
-const btnArbol = document.getElementById("arbolAst");
 const btnTabla = document.getElementById("tablaSimbolos");
 const btnAbrir = document.getElementById("abriArchivo");
 const inputFile = document.createElement('input');
@@ -13,7 +12,6 @@ inputFile.type = 'file';
 inputFile.accept = '.swift';
 inputFile.style.display = 'none';
 document.body.appendChild(inputFile);
-let errores = null
 
 document.addEventListener("DOMContentLoaded", (e) => {
     e.preventDefault;
@@ -56,6 +54,25 @@ consola.addEventListener("keyup", event => {
     .join('')
 });
 
+inputFile.addEventListener('change', () => {
+    const file = inputFile.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = () => {
+      const fileContent = reader.result;
+      codigo.value = fileContent
+      localStorage.setItem("texto", fileContent)
+      let dispararEvento = new Event("keyup")
+      codigo.dispatchEvent(dispararEvento)
+    };
+});
+
+btnAbrir.addEventListener("click", (e) =>{
+    e.preventDefault();
+    inputFile.click();
+    e.stopPropagation();
+});
+
 btnEjecutar.addEventListener("click", eventbtnEjecutar);
 async function eventbtnEjecutar() {
     const ruta = `http://localhost:3000/ejecutar`;
@@ -84,34 +101,9 @@ async function eventbtnEjecutar() {
     consola.dispatchEvent(dispararEvento)
 }
 
-btnArbol.addEventListener("click", obtenerArbol);
-async function obtenerArbol() {
-    const ruta = `http://localhost:3000/reporte`;
-    let bodyJson = {
-        codigo : codigo.value
-    }
-    const respuesta = await fetch(ruta,{
-        method: 'POST', // or 'PUT'
-        body: JSON.stringify(bodyJson), // data can be `string` or {object}!
-        headers:{
-        'Content-Type': 'application/json'
-        }
-    })
-    .then((res)=> res.json())
-    .then((data) => {
-        return data
-    })
-    console.log(respuesta)
-    if (respuesta.Err) {
-        alert("Ocurrio un error")
-        //errores = respuesta.Reporte_error
-        return
-    }
-}
-
 btnTabla.addEventListener("click", obtenerTabla);
 async function obtenerTabla() {
-    const ruta = `http://localhost:3000/simbolos`;
+    const ruta = `http://localhost:3000/tablaSimbolos`;
     const respuesta = await fetch(ruta,{
         method: 'GET', // or 'PUT'
     })
@@ -119,63 +111,21 @@ async function obtenerTabla() {
     .then((data) => {
         return data
     })
-    localStorage.setItem("reporte", respuesta.tabla)
+    localStorage.setItem("reporte", respuesta.Salida)
     window.open(`./html/reporte.html`, "_blank");
     console.log(respuesta)
-    //window.location.href = "./html/reporte.html"
 }
 
-inputFile.addEventListener('change', () => {
-    const file = inputFile.files[0];
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = () => {
-      const fileContent = reader.result;
-      codigo.value = fileContent
-      localStorage.setItem("texto", fileContent)
-      let dispararEvento = new Event("keyup")
-      codigo.dispatchEvent(dispararEvento)
-    };
-});
-
-btnAbrir.addEventListener("click", (e) =>{
-    e.preventDefault();
-    inputFile.click();
-    e.stopPropagation();
-});
-
-btnErrores.addEventListener("click", (e) =>{
-    e.preventDefault();
-    if (errores == null) {
-        alert("No hay errores")
-        return
-    }
-    let cuerpo = "digraph erres {\n"
-                + "    node [shape=plaintext]\n"
-                + "\n"
-                + "    tbl [\n"
-                + "        label=<\n"
-                + "            <table border=\"0\" cellborder=\"1\" cellspacing=\"0\">"
-                + "<tr><td bgcolor=\"/rdylgn11/5:/rdylgn11/5\"><b>#</b></td>"
-                + "<td bgcolor=\"/rdylgn11/5:/rdylgn11/5\"><b>Tipo de error</b></td>"
-                + "<td bgcolor=\"/rdylgn11/5:/rdylgn11/5\"><b>Descripcion</b></td>"
-                + "<td bgcolor=\"/rdylgn11/5:/rdylgn11/5\"><b>Linea</b></td>"
-                + "<td bgcolor=\"/rdylgn11/5:/rdylgn11/5\"><b>Columna</b></td>"
-                + "</tr>";
-    for (let index = 0; index < errores.length; index++) {
-        cuerpo += `<tr>
-        <td>${index + 1}</td>
-        <td>${errores[index].tipo}</td>
-        <td>${errores[index].mensaje}</td>
-        <td>${errores[index].linea}</td>
-        <td>${errores[index].columna}</td>
-        </tr>`;
-    }
-    cuerpo += "</table>\n"
-                + "        >\n"
-                + "    ];\n"
-                + "}";
-    localStorage.setItem("reporte", cuerpo)
+btnErrores.addEventListener("click", async (e) =>{
+    const ruta = `http://localhost:3000/tablaSimbolos`;
+    const respuesta = await fetch(ruta,{
+        method: 'GET', // or 'PUT'
+    })
+    .then((res)=> res.json())
+    .then((data) => {
+        return data
+    })
+    localStorage.setItem("reporte", respuesta.Salida)
     window.open(`./html/reporte.html`, "_blank");
-    e.stopPropagation();
+    console.log(respuesta)
 });

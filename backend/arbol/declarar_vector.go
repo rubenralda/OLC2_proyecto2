@@ -34,14 +34,16 @@ func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	posicion_valor := generador.Mi_generador.NewTemp()
 	posicion_puntero := generador.Mi_generador.NewTemp()
 	posicion_stack := generador.Mi_generador.NewTemp()
+	generador.Mi_generador.AddComment("inicio declaracion")
 	generador.Mi_generador.AddExpression(posicion_stack, "P", strconv.Itoa(ambito_padre.Size), "+")
 	generador.Mi_generador.AddSetStack("(int)"+posicion_stack, "H")
-
+	ambito_padre.Size++ //se reserva aunque no haya terminado de declarar porque puede que sobreescriban esa posicion
 	generador.Mi_generador.AddAssign(posicion_valor, "H")
 	generador.Mi_generador.AddExpression(posicion_puntero, posicion_valor, "1", "+")
 	generador.Mi_generador.AddSetHeap("(int)"+posicion_puntero, "-1")
 	generador.Mi_generador.AddExpression("H", "H", "2", "+") //reservo 2 espacios
 	for _, item := range d.Lista_expresion {
+		generador.Mi_generador.AddComment("ejecuta expresion")
 		resultado := item.Ejecutar(ambito_padre)
 		if variable.Is_instancia {
 			if variable.Tipo_struct != resultado.Tipo_struct {
@@ -51,7 +53,7 @@ func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 			if resultado.Type != valor.BOOLEAN {
 				panic("El item no es del tipo del array " + variable.Id)
 			}
-			// imprimir etiquetas y en un temporar guardar 0 o 1 para darl setHeap ese valor
+			// imprimir etiquetas y en un temporal guardar 0 o 1 para darle setHeap ese valor
 		} else if variable.Tipo != resultado.Type {
 			panic("El item no es del tipo del array " + variable.Id)
 		}
@@ -69,6 +71,5 @@ func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddComment("metiendovalortermino")
 	}
 	ambito_padre.AgregarVariable(variable)
-	ambito_padre.Size++
 	return valor.Value{}
 }

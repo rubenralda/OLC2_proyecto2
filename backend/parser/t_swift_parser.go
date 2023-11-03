@@ -1,6 +1,7 @@
-// Code generated from .\parser\T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
+// Code generated from ./parser/T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package parser // T_swift
+
 import (
 	"fmt"
 	"strconv"
@@ -271,7 +272,7 @@ func t_swiftParserInit() {
 		1, 0, 0, 0, 378, 376, 1, 0, 0, 0, 378, 379, 1, 0, 0, 0, 379, 380, 1, 0,
 		0, 0, 380, 381, 5, 23, 0, 0, 381, 382, 3, 112, 56, 0, 382, 384, 1, 0, 0,
 		0, 383, 353, 1, 0, 0, 0, 383, 363, 1, 0, 0, 0, 383, 373, 1, 0, 0, 0, 384,
-		45, 1, 0, 0, 0, 385, 386, 5, 13, 0, 0, 386, 389, 5, 72, 0, 0, 387, 388,
+		45, 1, 0, 0, 0, 385, 386, 7, 0, 0, 0, 386, 389, 5, 72, 0, 0, 387, 388,
 		5, 7, 0, 0, 388, 390, 3, 48, 24, 0, 389, 387, 1, 0, 0, 0, 389, 390, 1,
 		0, 0, 0, 390, 391, 1, 0, 0, 0, 391, 392, 5, 14, 0, 0, 392, 393, 3, 50,
 		25, 0, 393, 47, 1, 0, 0, 0, 394, 395, 5, 20, 0, 0, 395, 396, 3, 48, 24,
@@ -329,80 +330,79 @@ func t_swiftParserInit() {
 		544, 545, 5, 14, 0, 0, 545, 547, 3, 112, 56, 0, 546, 534, 1, 0, 0, 0, 546,
 		539, 1, 0, 0, 0, 547, 85, 1, 0, 0, 0, 548, 549, 5, 7, 0, 0, 549, 550, 3,
 		88, 44, 0, 550, 87, 1, 0, 0, 0, 551, 552, 7, 2, 0, 0, 552, 89, 1, 0, 0,
-		0, 553, 554, 5, 13, 0, 0, 554, 555, 5, 72, 0, 0, 555, 556, 5, 7, 0, 0,
-		556, 557, 5, 20, 0, 0, 557, 558, 3, 88, 44, 0, 558, 559, 5, 21, 0, 0, 559,
-		560, 3, 92, 46, 0, 560, 571, 1, 0, 0, 0, 561, 562, 5, 13, 0, 0, 562, 563,
-		5, 72, 0, 0, 563, 564, 5, 14, 0, 0, 564, 565, 5, 20, 0, 0, 565, 566, 3,
-		88, 44, 0, 566, 567, 5, 21, 0, 0, 567, 568, 5, 3, 0, 0, 568, 569, 5, 4,
-		0, 0, 569, 571, 1, 0, 0, 0, 570, 553, 1, 0, 0, 0, 570, 561, 1, 0, 0, 0,
-		571, 91, 1, 0, 0, 0, 572, 573, 5, 14, 0, 0, 573, 574, 5, 20, 0, 0, 574,
-		575, 3, 94, 47, 0, 575, 576, 5, 21, 0, 0, 576, 583, 1, 0, 0, 0, 577, 578,
-		5, 14, 0, 0, 578, 579, 5, 20, 0, 0, 579, 583, 5, 21, 0, 0, 580, 581, 5,
-		14, 0, 0, 581, 583, 5, 72, 0, 0, 582, 572, 1, 0, 0, 0, 582, 577, 1, 0,
-		0, 0, 582, 580, 1, 0, 0, 0, 583, 93, 1, 0, 0, 0, 584, 589, 3, 112, 56,
-		0, 585, 586, 5, 6, 0, 0, 586, 588, 3, 112, 56, 0, 587, 585, 1, 0, 0, 0,
-		588, 591, 1, 0, 0, 0, 589, 587, 1, 0, 0, 0, 589, 590, 1, 0, 0, 0, 590,
-		95, 1, 0, 0, 0, 591, 589, 1, 0, 0, 0, 592, 593, 5, 44, 0, 0, 593, 594,
-		5, 3, 0, 0, 594, 595, 3, 94, 47, 0, 595, 596, 5, 4, 0, 0, 596, 97, 1, 0,
-		0, 0, 597, 598, 5, 72, 0, 0, 598, 599, 5, 17, 0, 0, 599, 600, 5, 45, 0,
-		0, 600, 601, 5, 3, 0, 0, 601, 602, 3, 112, 56, 0, 602, 603, 5, 4, 0, 0,
-		603, 99, 1, 0, 0, 0, 604, 605, 5, 72, 0, 0, 605, 606, 5, 17, 0, 0, 606,
-		607, 5, 46, 0, 0, 607, 608, 5, 3, 0, 0, 608, 609, 5, 4, 0, 0, 609, 101,
-		1, 0, 0, 0, 610, 611, 5, 72, 0, 0, 611, 612, 5, 17, 0, 0, 612, 613, 5,
-		47, 0, 0, 613, 614, 5, 3, 0, 0, 614, 615, 5, 48, 0, 0, 615, 616, 5, 7,
-		0, 0, 616, 617, 3, 112, 56, 0, 617, 618, 5, 4, 0, 0, 618, 103, 1, 0, 0,
-		0, 619, 620, 5, 40, 0, 0, 620, 621, 5, 3, 0, 0, 621, 622, 3, 112, 56, 0,
-		622, 623, 5, 4, 0, 0, 623, 105, 1, 0, 0, 0, 624, 625, 5, 41, 0, 0, 625,
-		626, 5, 3, 0, 0, 626, 627, 3, 112, 56, 0, 627, 628, 5, 4, 0, 0, 628, 107,
-		1, 0, 0, 0, 629, 630, 5, 39, 0, 0, 630, 631, 5, 3, 0, 0, 631, 632, 3, 112,
-		56, 0, 632, 633, 5, 4, 0, 0, 633, 109, 1, 0, 0, 0, 634, 635, 5, 72, 0,
-		0, 635, 636, 5, 14, 0, 0, 636, 665, 3, 112, 56, 0, 637, 638, 5, 72, 0,
-		0, 638, 639, 5, 22, 0, 0, 639, 665, 3, 112, 56, 0, 640, 641, 5, 72, 0,
-		0, 641, 642, 5, 23, 0, 0, 642, 665, 3, 112, 56, 0, 643, 644, 5, 72, 0,
-		0, 644, 645, 5, 20, 0, 0, 645, 646, 3, 112, 56, 0, 646, 647, 5, 21, 0,
-		0, 647, 648, 5, 14, 0, 0, 648, 649, 3, 112, 56, 0, 649, 665, 1, 0, 0, 0,
-		650, 651, 5, 72, 0, 0, 651, 652, 5, 20, 0, 0, 652, 653, 3, 112, 56, 0,
-		653, 654, 5, 21, 0, 0, 654, 655, 5, 22, 0, 0, 655, 656, 3, 112, 56, 0,
-		656, 665, 1, 0, 0, 0, 657, 658, 5, 72, 0, 0, 658, 659, 5, 20, 0, 0, 659,
-		660, 3, 112, 56, 0, 660, 661, 5, 21, 0, 0, 661, 662, 5, 23, 0, 0, 662,
-		663, 3, 112, 56, 0, 663, 665, 1, 0, 0, 0, 664, 634, 1, 0, 0, 0, 664, 637,
-		1, 0, 0, 0, 664, 640, 1, 0, 0, 0, 664, 643, 1, 0, 0, 0, 664, 650, 1, 0,
-		0, 0, 664, 657, 1, 0, 0, 0, 665, 111, 1, 0, 0, 0, 666, 667, 6, 56, -1,
-		0, 667, 702, 3, 116, 58, 0, 668, 702, 3, 40, 20, 0, 669, 670, 5, 72, 0,
-		0, 670, 671, 5, 20, 0, 0, 671, 672, 3, 112, 56, 0, 672, 673, 5, 21, 0,
-		0, 673, 702, 1, 0, 0, 0, 674, 675, 5, 72, 0, 0, 675, 676, 5, 20, 0, 0,
-		676, 677, 3, 112, 56, 0, 677, 682, 5, 21, 0, 0, 678, 679, 5, 20, 0, 0,
-		679, 680, 3, 112, 56, 0, 680, 681, 5, 21, 0, 0, 681, 683, 1, 0, 0, 0, 682,
-		678, 1, 0, 0, 0, 683, 684, 1, 0, 0, 0, 684, 682, 1, 0, 0, 0, 684, 685,
-		1, 0, 0, 0, 685, 702, 1, 0, 0, 0, 686, 702, 3, 30, 15, 0, 687, 688, 5,
-		72, 0, 0, 688, 689, 5, 3, 0, 0, 689, 690, 3, 114, 57, 0, 690, 691, 5, 4,
-		0, 0, 691, 702, 1, 0, 0, 0, 692, 702, 5, 72, 0, 0, 693, 694, 5, 3, 0, 0,
-		694, 695, 3, 112, 56, 0, 695, 696, 5, 4, 0, 0, 696, 702, 1, 0, 0, 0, 697,
-		698, 5, 49, 0, 0, 698, 702, 3, 112, 56, 6, 699, 700, 5, 50, 0, 0, 700,
-		702, 3, 112, 56, 5, 701, 666, 1, 0, 0, 0, 701, 668, 1, 0, 0, 0, 701, 669,
-		1, 0, 0, 0, 701, 674, 1, 0, 0, 0, 701, 686, 1, 0, 0, 0, 701, 687, 1, 0,
-		0, 0, 701, 692, 1, 0, 0, 0, 701, 693, 1, 0, 0, 0, 701, 697, 1, 0, 0, 0,
-		701, 699, 1, 0, 0, 0, 702, 717, 1, 0, 0, 0, 703, 704, 10, 4, 0, 0, 704,
-		705, 7, 3, 0, 0, 705, 716, 3, 112, 56, 5, 706, 707, 10, 3, 0, 0, 707, 708,
-		7, 4, 0, 0, 708, 716, 3, 112, 56, 4, 709, 710, 10, 2, 0, 0, 710, 711, 7,
-		5, 0, 0, 711, 716, 3, 112, 56, 3, 712, 713, 10, 1, 0, 0, 713, 714, 7, 6,
-		0, 0, 714, 716, 3, 112, 56, 2, 715, 703, 1, 0, 0, 0, 715, 706, 1, 0, 0,
-		0, 715, 709, 1, 0, 0, 0, 715, 712, 1, 0, 0, 0, 716, 719, 1, 0, 0, 0, 717,
-		715, 1, 0, 0, 0, 717, 718, 1, 0, 0, 0, 718, 113, 1, 0, 0, 0, 719, 717,
-		1, 0, 0, 0, 720, 721, 5, 72, 0, 0, 721, 722, 5, 7, 0, 0, 722, 729, 3, 112,
-		56, 0, 723, 724, 5, 6, 0, 0, 724, 725, 5, 72, 0, 0, 725, 726, 5, 7, 0,
-		0, 726, 728, 3, 112, 56, 0, 727, 723, 1, 0, 0, 0, 728, 731, 1, 0, 0, 0,
-		729, 727, 1, 0, 0, 0, 729, 730, 1, 0, 0, 0, 730, 115, 1, 0, 0, 0, 731,
-		729, 1, 0, 0, 0, 732, 739, 5, 69, 0, 0, 733, 739, 5, 67, 0, 0, 734, 739,
-		5, 68, 0, 0, 735, 739, 5, 70, 0, 0, 736, 739, 5, 71, 0, 0, 737, 739, 5,
-		63, 0, 0, 738, 732, 1, 0, 0, 0, 738, 733, 1, 0, 0, 0, 738, 734, 1, 0, 0,
-		0, 738, 735, 1, 0, 0, 0, 738, 736, 1, 0, 0, 0, 738, 737, 1, 0, 0, 0, 739,
-		117, 1, 0, 0, 0, 74, 124, 129, 133, 137, 141, 145, 151, 153, 159, 164,
-		173, 177, 182, 186, 191, 194, 206, 215, 219, 222, 225, 228, 233, 238, 242,
-		246, 250, 254, 258, 262, 264, 270, 274, 279, 284, 295, 300, 309, 314, 317,
-		326, 341, 343, 351, 358, 368, 378, 383, 389, 402, 406, 417, 422, 446, 453,
-		481, 497, 501, 510, 516, 524, 529, 542, 546, 570, 582, 589, 664, 684, 701,
-		715, 717, 729, 738,
+		0, 553, 554, 7, 0, 0, 0, 554, 555, 5, 72, 0, 0, 555, 556, 5, 7, 0, 0, 556,
+		557, 5, 20, 0, 0, 557, 558, 3, 88, 44, 0, 558, 559, 5, 21, 0, 0, 559, 560,
+		3, 92, 46, 0, 560, 571, 1, 0, 0, 0, 561, 562, 7, 0, 0, 0, 562, 563, 5,
+		72, 0, 0, 563, 564, 5, 14, 0, 0, 564, 565, 5, 20, 0, 0, 565, 566, 3, 88,
+		44, 0, 566, 567, 5, 21, 0, 0, 567, 568, 5, 3, 0, 0, 568, 569, 5, 4, 0,
+		0, 569, 571, 1, 0, 0, 0, 570, 553, 1, 0, 0, 0, 570, 561, 1, 0, 0, 0, 571,
+		91, 1, 0, 0, 0, 572, 573, 5, 14, 0, 0, 573, 574, 5, 20, 0, 0, 574, 575,
+		3, 94, 47, 0, 575, 576, 5, 21, 0, 0, 576, 583, 1, 0, 0, 0, 577, 578, 5,
+		14, 0, 0, 578, 579, 5, 20, 0, 0, 579, 583, 5, 21, 0, 0, 580, 581, 5, 14,
+		0, 0, 581, 583, 5, 72, 0, 0, 582, 572, 1, 0, 0, 0, 582, 577, 1, 0, 0, 0,
+		582, 580, 1, 0, 0, 0, 583, 93, 1, 0, 0, 0, 584, 589, 3, 112, 56, 0, 585,
+		586, 5, 6, 0, 0, 586, 588, 3, 112, 56, 0, 587, 585, 1, 0, 0, 0, 588, 591,
+		1, 0, 0, 0, 589, 587, 1, 0, 0, 0, 589, 590, 1, 0, 0, 0, 590, 95, 1, 0,
+		0, 0, 591, 589, 1, 0, 0, 0, 592, 593, 5, 44, 0, 0, 593, 594, 5, 3, 0, 0,
+		594, 595, 3, 94, 47, 0, 595, 596, 5, 4, 0, 0, 596, 97, 1, 0, 0, 0, 597,
+		598, 5, 72, 0, 0, 598, 599, 5, 17, 0, 0, 599, 600, 5, 45, 0, 0, 600, 601,
+		5, 3, 0, 0, 601, 602, 3, 112, 56, 0, 602, 603, 5, 4, 0, 0, 603, 99, 1,
+		0, 0, 0, 604, 605, 5, 72, 0, 0, 605, 606, 5, 17, 0, 0, 606, 607, 5, 46,
+		0, 0, 607, 608, 5, 3, 0, 0, 608, 609, 5, 4, 0, 0, 609, 101, 1, 0, 0, 0,
+		610, 611, 5, 72, 0, 0, 611, 612, 5, 17, 0, 0, 612, 613, 5, 47, 0, 0, 613,
+		614, 5, 3, 0, 0, 614, 615, 5, 48, 0, 0, 615, 616, 5, 7, 0, 0, 616, 617,
+		3, 112, 56, 0, 617, 618, 5, 4, 0, 0, 618, 103, 1, 0, 0, 0, 619, 620, 5,
+		40, 0, 0, 620, 621, 5, 3, 0, 0, 621, 622, 3, 112, 56, 0, 622, 623, 5, 4,
+		0, 0, 623, 105, 1, 0, 0, 0, 624, 625, 5, 41, 0, 0, 625, 626, 5, 3, 0, 0,
+		626, 627, 3, 112, 56, 0, 627, 628, 5, 4, 0, 0, 628, 107, 1, 0, 0, 0, 629,
+		630, 5, 39, 0, 0, 630, 631, 5, 3, 0, 0, 631, 632, 3, 112, 56, 0, 632, 633,
+		5, 4, 0, 0, 633, 109, 1, 0, 0, 0, 634, 635, 5, 72, 0, 0, 635, 636, 5, 14,
+		0, 0, 636, 665, 3, 112, 56, 0, 637, 638, 5, 72, 0, 0, 638, 639, 5, 22,
+		0, 0, 639, 665, 3, 112, 56, 0, 640, 641, 5, 72, 0, 0, 641, 642, 5, 23,
+		0, 0, 642, 665, 3, 112, 56, 0, 643, 644, 5, 72, 0, 0, 644, 645, 5, 20,
+		0, 0, 645, 646, 3, 112, 56, 0, 646, 647, 5, 21, 0, 0, 647, 648, 5, 14,
+		0, 0, 648, 649, 3, 112, 56, 0, 649, 665, 1, 0, 0, 0, 650, 651, 5, 72, 0,
+		0, 651, 652, 5, 20, 0, 0, 652, 653, 3, 112, 56, 0, 653, 654, 5, 21, 0,
+		0, 654, 655, 5, 22, 0, 0, 655, 656, 3, 112, 56, 0, 656, 665, 1, 0, 0, 0,
+		657, 658, 5, 72, 0, 0, 658, 659, 5, 20, 0, 0, 659, 660, 3, 112, 56, 0,
+		660, 661, 5, 21, 0, 0, 661, 662, 5, 23, 0, 0, 662, 663, 3, 112, 56, 0,
+		663, 665, 1, 0, 0, 0, 664, 634, 1, 0, 0, 0, 664, 637, 1, 0, 0, 0, 664,
+		640, 1, 0, 0, 0, 664, 643, 1, 0, 0, 0, 664, 650, 1, 0, 0, 0, 664, 657,
+		1, 0, 0, 0, 665, 111, 1, 0, 0, 0, 666, 667, 6, 56, -1, 0, 667, 702, 3,
+		116, 58, 0, 668, 702, 3, 40, 20, 0, 669, 670, 5, 72, 0, 0, 670, 671, 5,
+		20, 0, 0, 671, 672, 3, 112, 56, 0, 672, 673, 5, 21, 0, 0, 673, 702, 1,
+		0, 0, 0, 674, 675, 5, 72, 0, 0, 675, 676, 5, 20, 0, 0, 676, 677, 3, 112,
+		56, 0, 677, 682, 5, 21, 0, 0, 678, 679, 5, 20, 0, 0, 679, 680, 3, 112,
+		56, 0, 680, 681, 5, 21, 0, 0, 681, 683, 1, 0, 0, 0, 682, 678, 1, 0, 0,
+		0, 683, 684, 1, 0, 0, 0, 684, 682, 1, 0, 0, 0, 684, 685, 1, 0, 0, 0, 685,
+		702, 1, 0, 0, 0, 686, 702, 3, 30, 15, 0, 687, 688, 5, 72, 0, 0, 688, 689,
+		5, 3, 0, 0, 689, 690, 3, 114, 57, 0, 690, 691, 5, 4, 0, 0, 691, 702, 1,
+		0, 0, 0, 692, 702, 5, 72, 0, 0, 693, 694, 5, 3, 0, 0, 694, 695, 3, 112,
+		56, 0, 695, 696, 5, 4, 0, 0, 696, 702, 1, 0, 0, 0, 697, 698, 5, 49, 0,
+		0, 698, 702, 3, 112, 56, 6, 699, 700, 5, 50, 0, 0, 700, 702, 3, 112, 56,
+		5, 701, 666, 1, 0, 0, 0, 701, 668, 1, 0, 0, 0, 701, 669, 1, 0, 0, 0, 701,
+		674, 1, 0, 0, 0, 701, 686, 1, 0, 0, 0, 701, 687, 1, 0, 0, 0, 701, 692,
+		1, 0, 0, 0, 701, 693, 1, 0, 0, 0, 701, 697, 1, 0, 0, 0, 701, 699, 1, 0,
+		0, 0, 702, 717, 1, 0, 0, 0, 703, 704, 10, 4, 0, 0, 704, 705, 7, 3, 0, 0,
+		705, 716, 3, 112, 56, 5, 706, 707, 10, 3, 0, 0, 707, 708, 7, 4, 0, 0, 708,
+		716, 3, 112, 56, 4, 709, 710, 10, 2, 0, 0, 710, 711, 7, 5, 0, 0, 711, 716,
+		3, 112, 56, 3, 712, 713, 10, 1, 0, 0, 713, 714, 7, 6, 0, 0, 714, 716, 3,
+		112, 56, 2, 715, 703, 1, 0, 0, 0, 715, 706, 1, 0, 0, 0, 715, 709, 1, 0,
+		0, 0, 715, 712, 1, 0, 0, 0, 716, 719, 1, 0, 0, 0, 717, 715, 1, 0, 0, 0,
+		717, 718, 1, 0, 0, 0, 718, 113, 1, 0, 0, 0, 719, 717, 1, 0, 0, 0, 720,
+		721, 5, 72, 0, 0, 721, 722, 5, 7, 0, 0, 722, 729, 3, 112, 56, 0, 723, 724,
+		5, 6, 0, 0, 724, 725, 5, 72, 0, 0, 725, 726, 5, 7, 0, 0, 726, 728, 3, 112,
+		56, 0, 727, 723, 1, 0, 0, 0, 728, 731, 1, 0, 0, 0, 729, 727, 1, 0, 0, 0,
+		729, 730, 1, 0, 0, 0, 730, 115, 1, 0, 0, 0, 731, 729, 1, 0, 0, 0, 732,
+		739, 5, 69, 0, 0, 733, 739, 5, 67, 0, 0, 734, 739, 5, 68, 0, 0, 735, 739,
+		5, 70, 0, 0, 736, 739, 5, 71, 0, 0, 737, 739, 5, 63, 0, 0, 738, 732, 1,
+		0, 0, 0, 738, 733, 1, 0, 0, 0, 738, 734, 1, 0, 0, 0, 738, 735, 1, 0, 0,
+		0, 738, 736, 1, 0, 0, 0, 738, 737, 1, 0, 0, 0, 739, 117, 1, 0, 0, 0, 74,
+		124, 129, 133, 137, 141, 145, 151, 153, 159, 164, 173, 177, 182, 186, 191,
+		194, 206, 215, 219, 222, 225, 228, 233, 238, 242, 246, 250, 254, 258, 262,
+		264, 270, 274, 279, 284, 295, 300, 309, 314, 317, 326, 341, 343, 351, 358,
+		368, 378, 383, 389, 402, 406, 417, 422, 446, 453, 481, 497, 501, 510, 516,
+		524, 529, 542, 546, 570, 582, 589, 664, 684, 701, 715, 717, 729, 738,
 	}
 	deserializer := antlr.NewATNDeserializer(nil)
 	staticData.atn = deserializer.Deserialize(staticData.serializedATN)
@@ -5855,10 +5855,13 @@ func (p *T_swiftParser) Matriz_declaracion() (localctx IMatriz_declaracionContex
 	p.EnterOuterAlt(localctx, 1)
 	{
 		p.SetState(385)
-		p.Match(T_swiftParserT__12)
-		if p.HasError() {
-			// Recognition error - abort rule
-			goto errorExit
+		_la = p.GetTokenStream().LA(1)
+
+		if !(_la == T_swiftParserT__11 || _la == T_swiftParserT__12) {
+			p.GetErrorHandler().RecoverInline(p)
+		} else {
+			p.GetErrorHandler().ReportMatch(p)
+			p.Consume()
 		}
 	}
 	{
@@ -6646,13 +6649,6 @@ type ISimple_matrizContext interface {
 
 	// GetParser returns the parser.
 	GetParser() antlr.Parser
-
-	// Getter signatures
-	Tipo_matriz() ITipo_matrizContext
-	Simple_matriz() ISimple_matrizContext
-	Int() antlr.TerminalNode
-	Expresion() IExpresionContext
-
 	// IsSimple_matrizContext differentiates from other interfaces.
 	IsSimple_matrizContext()
 }
@@ -6689,7 +6685,37 @@ func NewSimple_matrizContext(parser antlr.Parser, parent antlr.ParserRuleContext
 
 func (s *Simple_matrizContext) GetParser() antlr.Parser { return s.parser }
 
-func (s *Simple_matrizContext) Tipo_matriz() ITipo_matrizContext {
+func (s *Simple_matrizContext) CopyAll(ctx *Simple_matrizContext) {
+	s.CopyFrom(&ctx.BaseParserRuleContext)
+}
+
+func (s *Simple_matrizContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Simple_matrizContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
+	return antlr.TreesStringTree(s, ruleNames, recog)
+}
+
+type Definicion_matriz_padreContext struct {
+	Simple_matrizContext
+}
+
+func NewDefinicion_matriz_padreContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *Definicion_matriz_padreContext {
+	var p = new(Definicion_matriz_padreContext)
+
+	InitEmptySimple_matrizContext(&p.Simple_matrizContext)
+	p.parser = parser
+	p.CopyAll(ctx.(*Simple_matrizContext))
+
+	return p
+}
+
+func (s *Definicion_matriz_padreContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Definicion_matriz_padreContext) Tipo_matriz() ITipo_matrizContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ITipo_matrizContext); ok {
@@ -6705,7 +6731,7 @@ func (s *Simple_matrizContext) Tipo_matriz() ITipo_matrizContext {
 	return t.(ITipo_matrizContext)
 }
 
-func (s *Simple_matrizContext) Simple_matriz() ISimple_matrizContext {
+func (s *Definicion_matriz_padreContext) Simple_matriz() ISimple_matrizContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(ISimple_matrizContext); ok {
@@ -6721,11 +6747,55 @@ func (s *Simple_matrizContext) Simple_matriz() ISimple_matrizContext {
 	return t.(ISimple_matrizContext)
 }
 
-func (s *Simple_matrizContext) Int() antlr.TerminalNode {
+func (s *Definicion_matriz_padreContext) Int() antlr.TerminalNode {
 	return s.GetToken(T_swiftParserInt, 0)
 }
 
-func (s *Simple_matrizContext) Expresion() IExpresionContext {
+func (s *Definicion_matriz_padreContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+	switch t := visitor.(type) {
+	case T_swiftVisitor:
+		return t.VisitDefinicion_matriz_padre(s)
+
+	default:
+		return t.VisitChildren(s)
+	}
+}
+
+type Definicion_matriz_expresionContext struct {
+	Simple_matrizContext
+}
+
+func NewDefinicion_matriz_expresionContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *Definicion_matriz_expresionContext {
+	var p = new(Definicion_matriz_expresionContext)
+
+	InitEmptySimple_matrizContext(&p.Simple_matrizContext)
+	p.parser = parser
+	p.CopyAll(ctx.(*Simple_matrizContext))
+
+	return p
+}
+
+func (s *Definicion_matriz_expresionContext) GetRuleContext() antlr.RuleContext {
+	return s
+}
+
+func (s *Definicion_matriz_expresionContext) Tipo_matriz() ITipo_matrizContext {
+	var t antlr.RuleContext
+	for _, ctx := range s.GetChildren() {
+		if _, ok := ctx.(ITipo_matrizContext); ok {
+			t = ctx.(antlr.RuleContext)
+			break
+		}
+	}
+
+	if t == nil {
+		return nil
+	}
+
+	return t.(ITipo_matrizContext)
+}
+
+func (s *Definicion_matriz_expresionContext) Expresion() IExpresionContext {
 	var t antlr.RuleContext
 	for _, ctx := range s.GetChildren() {
 		if _, ok := ctx.(IExpresionContext); ok {
@@ -6741,18 +6811,14 @@ func (s *Simple_matrizContext) Expresion() IExpresionContext {
 	return t.(IExpresionContext)
 }
 
-func (s *Simple_matrizContext) GetRuleContext() antlr.RuleContext {
-	return s
+func (s *Definicion_matriz_expresionContext) Int() antlr.TerminalNode {
+	return s.GetToken(T_swiftParserInt, 0)
 }
 
-func (s *Simple_matrizContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) string {
-	return antlr.TreesStringTree(s, ruleNames, recog)
-}
-
-func (s *Simple_matrizContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
+func (s *Definicion_matriz_expresionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 	switch t := visitor.(type) {
 	case T_swiftVisitor:
-		return t.VisitSimple_matriz(s)
+		return t.VisitDefinicion_matriz_expresion(s)
 
 	default:
 		return t.VisitChildren(s)
@@ -6770,6 +6836,7 @@ func (p *T_swiftParser) Simple_matriz() (localctx ISimple_matrizContext) {
 
 	switch p.GetInterpreter().AdaptivePredict(p.BaseParser, p.GetTokenStream(), 53, p.GetParserRuleContext()) {
 	case 1:
+		localctx = NewDefinicion_matriz_padreContext(p, localctx)
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(424)
@@ -6845,6 +6912,7 @@ func (p *T_swiftParser) Simple_matriz() (localctx ISimple_matrizContext) {
 		}
 
 	case 2:
+		localctx = NewDefinicion_matriz_expresionContext(p, localctx)
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(435)
@@ -9504,6 +9572,8 @@ func (s *Array_vacioContext) Accept(visitor antlr.ParseTreeVisitor) interface{} 
 func (p *T_swiftParser) Array_declaracion() (localctx IArray_declaracionContext) {
 	localctx = NewArray_declaracionContext(p, p.GetParserRuleContext(), p.GetState())
 	p.EnterRule(localctx, 90, T_swiftParserRULE_array_declaracion)
+	var _la int
+
 	p.SetState(570)
 	p.GetErrorHandler().Sync(p)
 	if p.HasError() {
@@ -9516,10 +9586,13 @@ func (p *T_swiftParser) Array_declaracion() (localctx IArray_declaracionContext)
 		p.EnterOuterAlt(localctx, 1)
 		{
 			p.SetState(553)
-			p.Match(T_swiftParserT__12)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+			_la = p.GetTokenStream().LA(1)
+
+			if !(_la == T_swiftParserT__11 || _la == T_swiftParserT__12) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
 			}
 		}
 		{
@@ -9568,10 +9641,13 @@ func (p *T_swiftParser) Array_declaracion() (localctx IArray_declaracionContext)
 		p.EnterOuterAlt(localctx, 2)
 		{
 			p.SetState(561)
-			p.Match(T_swiftParserT__12)
-			if p.HasError() {
-				// Recognition error - abort rule
-				goto errorExit
+			_la = p.GetTokenStream().LA(1)
+
+			if !(_la == T_swiftParserT__11 || _la == T_swiftParserT__12) {
+				p.GetErrorHandler().RecoverInline(p)
+			} else {
+				p.GetErrorHandler().ReportMatch(p)
+				p.Consume()
 			}
 		}
 		{

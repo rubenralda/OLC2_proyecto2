@@ -137,5 +137,58 @@ type Id_matriz struct {
 }
 
 func (a Id_matriz) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	return valor.Value{}
+	variable, size := ambito_padre.BuscarVariable(a.Id)
+	if variable == nil {
+		panic("La variable no existe " + a.Id)
+	}
+	if variable.Tipo_dimension != valor.DIMENSIONN {
+		panic("La variable no es una matriz " + a.Id)
+	}
+	copia_dimen := make([]int, len(variable.Len_dimension))
+	copy(copia_dimen, variable.Len_dimension)
+	localizacion := generador.Mi_generador.NewTemp()
+	aux := generador.Mi_generador.NewTemp()
+	label_error := generador.Mi_generador.NewLabel()
+	label_salida := generador.Mi_generador.NewLabel()
+	generador.Mi_generador.AddAssign(localizacion, "0")
+	for i, indice := range a.Indices {
+		len_fila := 1
+		for _, valor := range copia_dimen[i+1:] {
+			len_fila *= valor
+		}
+		resultado := indice.Ejecutar(ambito_padre)
+		if resultado.Type != valor.INTEGER {
+			panic("El indice no es tipo int")
+		}
+		generador.Mi_generador.AddIf(resultado.Value, strconv.Itoa(variable.Len_dimension[i]), ">=", label_error)
+		generador.Mi_generador.AddExpression(aux, resultado.Value, strconv.Itoa(len_fila), "*")
+		generador.Mi_generador.AddExpression(localizacion, localizacion, aux, "+")
+	}
+	puntero_variable := generador.Mi_generador.NewTemp()
+	puntero_heap := generador.Mi_generador.NewTemp()
+	tmp_posicion_entorno := generador.Mi_generador.NewTemp()
+	if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+		generador.Mi_generador.AddAssign(tmp_posicion_entorno, "0")
+	} else {
+		generador.Mi_generador.AddExpression(tmp_posicion_entorno, "P", strconv.Itoa(size), "-")
+	}
+	generador.Mi_generador.AddExpression(puntero_variable, tmp_posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
+	generador.Mi_generador.AddGetStack(puntero_heap, "(int)"+puntero_variable)
+
+	generador.Mi_generador.AddExpression(puntero_heap, puntero_heap, localizacion, "+")
+	valor_heap := generador.Mi_generador.NewTemp()
+	generador.Mi_generador.AddGetHeap(valor_heap, "(int)"+puntero_heap)
+	generador.Mi_generador.AddGoto(label_salida)
+
+	generador.Mi_generador.AddLabel(label_error)
+	// error index
+	generador.Mi_generador.AddPrintf("c", "69")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddPrintf("c", "111")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddAssign(valor_heap, "9999999827968.00") //es nil
+
+	generador.Mi_generador.AddLabel(label_salida)
+	return valor.Value{Value: valor_heap, Type: variable.Tipo}
 }

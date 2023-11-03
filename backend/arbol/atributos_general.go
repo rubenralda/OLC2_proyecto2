@@ -23,15 +23,6 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	if variable == nil {
 		panic("La variable no existe " + a.ID_inicial.ID)
 	}
-	if a.ID_inicial.Vector { //el id es vector: id[i](.atributo)*
-		if variable.Tipo_dimension != valor.DIMENSION1 {
-			panic("El id no es un vector" + a.ID_inicial.ID)
-		}
-		if !variable.Is_instancia {
-			panic("El vector no es una instancia")
-		}
-		//codigo para acceder a la posicion
-	}
 	if variable.Is_instancia { //vive en el stack
 		var resultado valor.Value
 		estruct, _ := ambito_padre.Buscar_struct(variable.Tipo_struct) //busco el struct para recuperar que atributo es
@@ -46,6 +37,47 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		}
 		generador.Mi_generador.AddExpression(posicion_struct, tmp_posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
 		generador.Mi_generador.AddGetStack(puntero_heap, "(int)"+posicion_struct)
+		if a.ID_inicial.Vector { //el id es vector: id[i](.atributo)* si no es, puntero_heap queda igual
+			if variable.Tipo_dimension != valor.DIMENSION1 {
+				panic("El id no es un vector" + a.ID_inicial.ID)
+			}
+			if !variable.Is_instancia {
+				panic("El vector no es una instancia")
+			}
+			//codigo para acceder a la posicion
+			indice := a.ID_inicial.Indice.Ejecutar(ambito_padre)
+			if indice.Type != valor.INTEGER {
+				panic("El indice no es entero")
+			}
+			tmp_indice := generador.Mi_generador.NewTemp()
+			generador.Mi_generador.AddAssign(tmp_indice, indice.Value)
+			valor_heap := generador.Mi_generador.NewTemp()
+			label_inicio := generador.Mi_generador.NewLabel()
+			label_error := generador.Mi_generador.NewLabel()
+			label_salida := generador.Mi_generador.NewLabel()
+			generador.Mi_generador.AddComment("metiendo")
+			generador.Mi_generador.AddLabel(label_inicio)
+			generador.Mi_generador.AddGetHeap(valor_heap, "(int)"+puntero_heap)
+			generador.Mi_generador.AddExpression(puntero_heap, puntero_heap, "1", "+") //puntero del siguiente elemento
+			generador.Mi_generador.AddGetHeap(puntero_heap, "(int)"+puntero_heap)
+			generador.Mi_generador.AddIf(puntero_heap, "-1", "==", label_error) //si es -1 se paso del index
+			generador.Mi_generador.AddIf(tmp_indice, "0", "<=", label_salida)   //termino y el valor_heap es el resultado
+			generador.Mi_generador.AddExpression(tmp_indice, tmp_indice, "1", "-")
+			generador.Mi_generador.AddGoto(label_inicio)
+
+			generador.Mi_generador.AddLabel(label_error)
+			// error index
+			generador.Mi_generador.AddPrintf("c", "69")
+			generador.Mi_generador.AddPrintf("c", "114")
+			generador.Mi_generador.AddPrintf("c", "114")
+			generador.Mi_generador.AddPrintf("c", "111")
+			generador.Mi_generador.AddPrintf("c", "114")
+			generador.Mi_generador.AddAssign(valor_heap, "0") //es nil
+
+			generador.Mi_generador.AddLabel(label_salida)
+			generador.Mi_generador.AddAssign(puntero_heap, valor_heap)
+			generador.Mi_generador.AddComment("termino")
+		}
 		for indice, atributo_buscar := range a.Lista_atributos { //viene uno si o si
 			atributo, posicion := estruct.Buscar_atributo(atributo_buscar.ID)
 			if atributo == nil {

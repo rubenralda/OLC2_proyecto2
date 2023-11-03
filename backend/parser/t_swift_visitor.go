@@ -1,6 +1,7 @@
-// Code generated from .\parser\T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
+// Code generated from ./parser/T_swift.g4 by ANTLR 4.13.0. DO NOT EDIT.
 
 package parser // T_swift
+
 import "github.com/antlr4-go/antlr/v4"
 
 // A complete Visitor for a parse tree produced by T_swiftParser.
@@ -121,8 +122,11 @@ type T_swiftVisitor interface {
 	// Visit a parse tree produced by T_swiftParser#elemento_matriz.
 	VisitElemento_matriz(ctx *Elemento_matrizContext) interface{}
 
-	// Visit a parse tree produced by T_swiftParser#simple_matriz.
-	VisitSimple_matriz(ctx *Simple_matrizContext) interface{}
+	// Visit a parse tree produced by T_swiftParser#definicion_matriz_padre.
+	VisitDefinicion_matriz_padre(ctx *Definicion_matriz_padreContext) interface{}
+
+	// Visit a parse tree produced by T_swiftParser#definicion_matriz_expresion.
+	VisitDefinicion_matriz_expresion(ctx *Definicion_matriz_expresionContext) interface{}
 
 	// Visit a parse tree produced by T_swiftParser#for_in_statement.
 	VisitFor_in_statement(ctx *For_in_statementContext) interface{}

@@ -270,7 +270,7 @@ func (g *Generator) Generar_funcion_int() {
 		multiplicador := g.NewTemp()
 		//se genera la funcion
 		g.Natives = append(g.Natives, "void funcion_int_float_rubencin() {\n")
-		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
+		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")                    //parametro
 		g.Natives = append(g.Natives, "\t"+newTemp2+" = stack[(int)"+newTemp1+"];\n") //valor float
 		g.Natives = append(g.Natives, "\t"+newTemp2+" = (int)"+newTemp2+";\n")
 		g.Natives = append(g.Natives, "\tstack[(int)P] = "+newTemp2+";\n") //valor de retorno
@@ -278,7 +278,7 @@ func (g *Generator) Generar_funcion_int() {
 		g.Natives = append(g.Natives, "}\n\n")
 		//funcion int para string
 		g.Natives = append(g.Natives, "void funcion_int_string_rubencin() {\n")
-		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")
+		g.Natives = append(g.Natives, "\t"+newTemp1+" = P + 1;\n")                        //parametro
 		g.Natives = append(g.Natives, "\t"+puntero_heap+" = stack[(int)"+newTemp1+"];\n") //puntero heap string
 		g.Natives = append(g.Natives, "\t"+label_fin_cadena+":\n")                        //inicio ciclo
 		g.Natives = append(g.Natives, "\t"+valor_char+" = heap[(int)"+puntero_heap+"];\n")
