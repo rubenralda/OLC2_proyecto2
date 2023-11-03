@@ -1,69 +1,66 @@
 print("--------------------------");
-print("----------STRUCT----------");
+print("---------VECTORES---------");
 print("----------12 pts----------");
 print("--------------------------");
 
-print(" ")
+print("")
 print("=============================================")
-print("================DEFINICIÓN===================")
+print("================CREACIÓN=====================")
 print("=============================================")
+var arr1: [Int] = [8, 4, 6, 2]
+var arr2: [Int] = [40, 21, 1, 3, 14, 4]
+var arr3: [Int] = [90, 3, 40, 10, 8, 5]
+print("Se crean los arreglos arr1, arr2, arr3")
 
-struct StructArr {
-    var datos: Float
-}
-
-struct CentroTuristico {
-    var nombre: String
-}
-
-struct Carro {
-    var placa: String
-    var color: String
-    var tipo: String
-}
-
-struct Personaje {
-    var nombre: String
-    var edad: Int
-    var descripcion: String
-    var carro: Carro
-    var numeros: StructArr
-}
-
-print(" ")
+print("")
 print("=============================================")
-print("==============INSTANCIACIÓN==================")
+print("=================ACCESO======================")
 print("=============================================")
 
-let centro1 = CentroTuristico(nombre: "Volcan de pacaya")
-let centro2 = CentroTuristico(nombre: "Rio dulce")
-let centro3 = CentroTuristico(nombre: "Laguna Luchoa")
-let centro4 = CentroTuristico(nombre: "Playa Blanca")
-let centro5 = CentroTuristico(nombre: "Antigua Guatemala")
-let centro6 = CentroTuristico(nombre: "Lago de Atitlan")
-let newCarro = Carro(placa: "090PLO", color: "gris", tipo: "mecanico")
-var nums = StructArr(datos: 0.0)
+print("arr1: ", arr1[1]+4)
+print("arr2: ", 5+8*5-arr2[2])
+print("arr3: ", arr3[4]*8)
 
-var p1 = Personaje(
-    nombre: "Jose",
-    edad: 18,
-    descripcion: "No hace nada",
-    carro: newCarro,
-    numeros: nums
-)
-
-var nums2 = StructArr(datos: Float("23.43"))
-
-print(" ")
 print("=============================================")
-print("========ASIGNACIÓN Y ACCESO==================")
+print("================FUNCIONES====================")
 print("=============================================")
 
-print("El nombre del Centro turistico 1 es: ", centro1.nombre)
-print("El nombre del Centro turistico 2 es: ", centro2.nombre)
-print("El nombre del Centro turistico 3 es: ", centro3.nombre)
-print("El nombre del Centro turistico 4 es: ", centro4.nombre)
-print("El nombre del Centro turistico 5 es: ", centro5.nombre)
-print("El nombre del Centro turistico 6 es: ", centro6.nombre)
+arr1.append(9)
+print("append arr1: ", arr1[4])
 
-print("Persona nombre: ", p1.nombre, ", edad: ", p1.edad, ", carroTipo: ", p1.carro.tipo, ", numeros: ", p1.numeros.datos)
+arr2.removeLast()
+arr2.append(6)
+print("append arr2: ", arr2[5])
+
+arr3.remove(at: 4)
+print("append arr3: ", arr3[4])
+
+print("arr1 vacío: ", arr1.isEmpty)
+print("arr1 cantidad: ", arr1.count)
+
+/*
+--------------------------
+---------VECTORES---------
+----------12 pts----------
+--------------------------
+
+=============================================
+================CREACIÓN=====================
+=============================================
+Se crean los arreglos arr1, arr2, arr3
+
+=============================================
+=================ACCESO======================
+=============================================
+arr1:  8
+arr2:  44
+arr3:  64
+=============================================
+================FUNCIONES====================
+=============================================
+append arr1:  9
+append arr2:  6
+append arr3:  5
+arr1 vacío:  false
+arr1 cantidad:  5
+*/

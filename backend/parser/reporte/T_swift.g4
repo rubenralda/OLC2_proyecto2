@@ -162,7 +162,7 @@ asignar_atributos
 // GRAMATICA PARA DECLARAR MATRICES
 
 matriz_declaracion
-    : 'var' Identificador ( ':' tipo_matriz )? '=' definicion_matriz
+    : ('var'|'let') Identificador ( ':' tipo_matriz )? '=' definicion_matriz
     ;
 
 tipo_matriz
@@ -257,8 +257,8 @@ tipos
 //declaracin de vectores
 
 array_declaracion
-    : 'var' Identificador ':' '[' tipos ']' definicion_vector #array_comun
-    | 'var' Identificador '=' '[' tipos ']' '(' ')' #array_vacio
+    : ('var'|'let') Identificador ':' '[' tipos ']' definicion_vector #array_comun
+    | ('var'|'let') Identificador '=' '[' tipos ']' '(' ')' #array_vacio
     ;
 
 definicion_vector

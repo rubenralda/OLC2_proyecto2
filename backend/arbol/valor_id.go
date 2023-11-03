@@ -69,7 +69,66 @@ type Id_vector struct {
 }
 
 func (a Id_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	return valor.Value{}
+	variable, size := ambito_padre.BuscarVariable(a.Id)
+	if variable == nil {
+		panic("La variable no existe " + a.Id)
+	}
+	if variable.Tipo_dimension != valor.DIMENSION1 {
+		panic("La variable no es un vector " + a.Id)
+	}
+	indice := a.Indice.Ejecutar(ambito_padre)
+	if indice.Type != valor.INTEGER {
+		panic("El indice no es entero")
+	}
+	tmp_indice := generador.Mi_generador.NewTemp()
+	generador.Mi_generador.AddAssign(tmp_indice, indice.Value)
+	puntero_variable := generador.Mi_generador.NewTemp()
+	puntero_heap := generador.Mi_generador.NewTemp()
+	tmp_posicion_entorno := generador.Mi_generador.NewTemp()
+	valor_heap := generador.Mi_generador.NewTemp()
+	label_inicio := generador.Mi_generador.NewLabel()
+	label_error := generador.Mi_generador.NewLabel()
+	label_salida := generador.Mi_generador.NewLabel()
+	if ambito.Ambito_global.Is_global_variable(variable.Id) && !generador.Mi_generador.MainCode {
+		generador.Mi_generador.AddAssign(tmp_posicion_entorno, "0")
+	} else {
+		generador.Mi_generador.AddExpression(tmp_posicion_entorno, "P", strconv.Itoa(size), "-")
+	}
+	generador.Mi_generador.AddExpression(puntero_variable, tmp_posicion_entorno, strconv.Itoa(variable.Posicion_relativa), "+")
+	generador.Mi_generador.AddGetStack(puntero_heap, "(int)"+puntero_variable)
+
+	generador.Mi_generador.AddLabel(label_inicio)
+	generador.Mi_generador.AddGetHeap(valor_heap, "(int)"+puntero_heap)
+	generador.Mi_generador.AddExpression(puntero_heap, puntero_heap, "1", "+") //puntero del siguiente elemento
+	generador.Mi_generador.AddGetHeap(puntero_heap, "(int)"+puntero_heap)
+	generador.Mi_generador.AddIf(puntero_heap, "-1", "==", label_error) //si es -1 se paso del index
+	generador.Mi_generador.AddIf(tmp_indice, "0", "<=", label_salida)   //termino y el valor_heap es el resultado
+	generador.Mi_generador.AddExpression(tmp_indice, tmp_indice, "1", "-")
+	generador.Mi_generador.AddGoto(label_inicio)
+
+	generador.Mi_generador.AddLabel(label_error)
+	// error index
+	generador.Mi_generador.AddPrintf("c", "69")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddPrintf("c", "111")
+	generador.Mi_generador.AddPrintf("c", "114")
+	generador.Mi_generador.AddAssign(valor_heap, "9999999827968.00") //es nil
+	//generador.Mi_generador.AddGoto(label_salida)
+
+	generador.Mi_generador.AddLabel(label_salida)
+	if variable.Tipo == valor.BOOLEAN {
+		true_label := generador.Mi_generador.NewLabel()
+		false_label := generador.Mi_generador.NewLabel()
+
+		generador.Mi_generador.AddIf(valor_heap, "1", "==", true_label)
+		generador.Mi_generador.AddGoto(false_label)
+		result := valor.Value{Type: valor.BOOLEAN}
+		result.TrueLabel = append(result.TrueLabel, true_label)
+		result.FalseLabel = append(result.FalseLabel, false_label)
+		return result
+	}
+	return valor.Value{Value: valor_heap, Type: variable.Tipo, Is_intancia: variable.Is_instancia, Tipo_struct: variable.Tipo_struct}
 }
 
 type Id_matriz struct {
