@@ -2,16 +2,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
-	"log"
 	"main/ambito"
 	"main/arbol"
 	"main/generador"
 	"main/parser"
 	"main/valor"
-	"os"
-	"os/exec"
 	"strconv"
+	"time"
 
 	"github.com/antlr4-go/antlr/v4"
 	"github.com/gofiber/fiber/v2"
@@ -822,9 +819,7 @@ func handleVisitor(c *fiber.Ctx) error {
 	for _, linea := range resultado {
 		linea.Ejecutar(ambito_global)
 	}
-	for _, local := range ambito_global.Variables {
-		fmt.Println(local)
-	}
+	//fmt.Println(ambito.Errores)
 	generador.Mi_generador.GenerateFinalCode()
 	codigo_final := ""
 	for _, item := range generador.Mi_generador.GetFinalCode() {
@@ -838,34 +833,11 @@ func handleVisitor(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
-func reporte(c *fiber.Ctx) error {
-	var message Message
-	if err := c.BodyParser(&message); err != nil {
-		return err
-	}
-	code := message.Codigo
-	if err := ioutil.WriteFile("./parser/reporte/entrada.swift", []byte(code), 0644); err != nil {
-		log.Fatal(err)
-	}
-	// Comando de generación que deseas ejecutar
-	comando := "go generate ./..."
-
-	// Crear un objeto Cmd
-	cmd := exec.Command("bash", "-c", comando)
-
-	// Configurar la salida estándar para ver los resultados
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-
-	// Ejecutar el comando
-	err := cmd.Run()
-	if err != nil {
-		panic(err)
-	}
+func reporte_errores(c *fiber.Ctx) error {
 	response := Resp{
-		Salida:  "",
-		Err:     false,
-		Message: "Ejecución realizada con éxito",
+		Salida:  ambito.Generar_reporte_erroes(),
+		Err:     true,
+		Message: "",
 	}
 	return c.Status(fiber.StatusOK).JSON(response)
 }
@@ -882,8 +854,20 @@ func tabla_simbolos(c *fiber.Ctx) error {
 func main() {
 	app := fiber.New()
 	app.Use(cors.New())
+	// Middleware para imprimir las peticiones
+	app.Use(func(c *fiber.Ctx) error {
+		currentTime := time.Now()
+		fmt.Print(currentTime.Format("2006-01-02")+" ", c.OriginalURL(), " ", c.Method(), " ")
+		return c.Next()
+	})
+	// Registro de la respuesta
+	app.Use(func(c *fiber.Ctx) error {
+		err := c.Next()
+		fmt.Println(c.Response().StatusCode())
+		return err
+	})
 	app.Post("/ejecutar", handleVisitor)
-	app.Post("/reporte", reporte)
+	app.Get("/errores", reporte_errores)
 	app.Get("/tablaSimbolos", tabla_simbolos)
 	app.Listen(":3000")
 }

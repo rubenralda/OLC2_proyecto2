@@ -18,14 +18,16 @@ type Declarar_constante struct {
 func (d Declarar_constante) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	result := valor.Value{Type: valor.NULL}
 	if rr, _ := ambito_padre.BuscarVariable(d.Id); rr != nil {
-		panic("Error la variable ya existe: " + d.Id)
+		ambito_padre.Agregar_error("Error la variable ya existe: " + d.Id)
+		return valor.Value{}
 	}
 	variable := ambito.Variables{Id: d.Id, Posicion_relativa: ambito_padre.Size, Tipo_dimension: valor.DIMENSION0, Is_constante: true}
 	tmp_posicion_variable := generador.Mi_generador.NewTemp()
 	resultado := d.Expresion.Ejecutar(ambito_padre)
 	if resultado.Type == valor.BOOLEAN {
 		if d.Tipo != "Bool" && d.Tipo != "" {
-			panic("Error tipos no coinciden")
+			ambito_padre.Agregar_error("Error tipos no coinciden " + variable.Id)
+			return valor.Value{}
 		}
 		//si no es temp (boolean)
 		newLabel := generador.Mi_generador.NewLabel()
@@ -60,12 +62,14 @@ func (d Declarar_constante) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				variable.Is_instancia = true
 				variable.Tipo_struct = result.Tipo_struct
 			} else {
-				panic("Error tipos no coinciden")
+				ambito_padre.Agregar_error("Error tipos no coinciden " + variable.Id)
+				return valor.Value{}
 			}
 		} else if Tipo_variable[d.Tipo] == resultado.Type {
 			variable.Tipo = resultado.Type
 		} else {
-			panic("Error el tipo de la expresion y la variable no coinciden")
+			ambito_padre.Agregar_error("Error el tipo de la expresion y la variable no coinciden " + variable.Id)
+			return valor.Value{}
 		}
 		generador.Mi_generador.AddExpression(tmp_posicion_variable, "P", strconv.Itoa(variable.Posicion_relativa), "+")
 		generador.Mi_generador.AddSetStack("(int)"+tmp_posicion_variable, resultado.Value)

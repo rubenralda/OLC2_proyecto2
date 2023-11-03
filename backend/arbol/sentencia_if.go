@@ -16,12 +16,12 @@ type Sentencia_if struct {
 
 func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
-	generador.Mi_generador.AddComment("if_sentencia")
-	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia if", Padre: ambito_padre}
+	ambito_local := &ambito.Ambito{NombreAmbito: "Sentencia if", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
 	resultado := s.Expresion.Ejecutar(ambito_padre)
 	if resultado.Type != valor.BOOLEAN {
-		panic("Error la expresion no es un bool que espera el if")
+		ambito_local.Agregar_error("Error la expresion no es un bool que espera el if")
+		return valor.Value{}
 	}
 	label_salida := generador.Mi_generador.NewLabel()
 	//true labels
@@ -55,6 +55,5 @@ func (s Sentencia_if) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	generador.Mi_generador.AddGoto(label_salida)
 	//agregando etiquetas de salida
 	generador.Mi_generador.AddLabel(label_salida)
-	generador.Mi_generador.AddComment("fin_if_sentendia")
 	return result
 }

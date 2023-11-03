@@ -14,11 +14,12 @@ type Sentencia_guard struct {
 
 func (s Sentencia_guard) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
-	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia guard", Padre: ambito_padre}
+	ambito_local := &ambito.Ambito{NombreAmbito: "Sentencia guard", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
 	resultado := s.Expresion.Ejecutar(ambito_padre)
 	if resultado.Type != valor.BOOLEAN {
-		panic("Error la expresion no es un bool que espera el guard")
+		ambito_local.Agregar_error("Error la expresion no es un bool que espera el guard")
+		return valor.Value{}
 	}
 	label_salida := generador.Mi_generador.NewLabel()
 	//false labels

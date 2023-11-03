@@ -15,10 +15,12 @@ type Declarar_objeto struct {
 func (d Declarar_objeto) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	estruct, _ := ambito_padre.Buscar_struct(d.Id)
 	if estruct == nil {
-		panic("El struct no esta definido " + d.Id)
+		ambito_padre.Agregar_error("El struct no esta definido " + d.Id)
+		return valor.Value{}
 	}
 	if len(d.Dupla) != len(estruct.Atributos) {
-		panic("La cantidad de atributos no coincide " + d.Id)
+		ambito_padre.Agregar_error("La cantidad de atributos no coincide " + d.Id)
+		return valor.Value{}
 	}
 	tmp_inicio_struct := generador.Mi_generador.NewTemp()
 	copia_inicio := generador.Mi_generador.NewTemp()
@@ -26,12 +28,14 @@ func (d Declarar_objeto) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	generador.Mi_generador.AddExpression("H", "H", strconv.Itoa(len(d.Dupla)), "+") //reserver el espacio en el heap
 	for i, atributo := range d.Dupla {
 		if atributo.Id_externo != estruct.Atributos[i].Id {
-			panic("El nombre externo no coincide con el nombre de atributo")
+			ambito_padre.Agregar_error("El nombre externo no coincide con el nombre de atributo " + d.Id)
+			return valor.Value{}
 		}
 		resultado := atributo.Expresion.Ejecutar(ambito_padre)
 		if resultado.Type == valor.NULL {
 			if resultado.Tipo_struct != estruct.Atributos[i].Tipo_struct {
-				panic("El tipo no coincide con el del atributo " + estruct.Atributos[i].Tipo_struct)
+				ambito_padre.Agregar_error("El tipo no coincide con el del atributo " + estruct.Atributos[i].Tipo_struct)
+				return valor.Value{}
 			}
 			generador.Mi_generador.AddExpression(copia_inicio, tmp_inicio_struct, strconv.Itoa(i), "+")
 			generador.Mi_generador.AddSetHeap("(int)"+copia_inicio, resultado.Value)
@@ -57,7 +61,8 @@ func (d Declarar_objeto) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				generador.Mi_generador.AddExpression("H", "H", "1", "+")
 			}
 		} else {
-			panic("El tipo no coincide con el del atributo " + estruct.Atributos[i].Tipo_struct)
+			ambito_padre.Agregar_error("El tipo no coincide con el del atributo " + estruct.Atributos[i].Tipo_struct)
+			return valor.Value{}
 		}
 	}
 	return valor.Value{Value: tmp_inicio_struct, Is_intancia: true, Tipo_struct: d.Id}

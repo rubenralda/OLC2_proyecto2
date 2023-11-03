@@ -80,7 +80,7 @@ async function eventbtnEjecutar() {
         Codigo : codigo.value
     }
     const respuesta = await fetch(ruta,{
-        method: 'POST', // or 'PUT'
+        method: 'POST',
         body: JSON.stringify(bodyJson), // data can be `string` or {object}!
         headers:{
         'Content-Type': 'application/json'
@@ -105,7 +105,7 @@ btnTabla.addEventListener("click", obtenerTabla);
 async function obtenerTabla() {
     const ruta = `http://localhost:3000/tablaSimbolos`;
     const respuesta = await fetch(ruta,{
-        method: 'GET', // or 'PUT'
+        method: 'GET',
     })
     .then((res)=> res.json())
     .then((data) => {
@@ -117,15 +117,15 @@ async function obtenerTabla() {
 }
 
 btnErrores.addEventListener("click", async (e) =>{
-    const ruta = `http://localhost:3000/tablaSimbolos`;
+    const ruta = `http://localhost:3000/errores`;
     const respuesta = await fetch(ruta,{
-        method: 'GET', // or 'PUT'
+        method: 'GET',
     })
     .then((res)=> res.json())
     .then((data) => {
         return data
     })
-    localStorage.setItem("reporte", respuesta.Salida)
-    window.open(`./html/reporte.html`, "_blank");
+    localStorage.setItem("errores", respuesta.Salida)
+    window.open(`./html/errores.html`, "_blank");
     console.log(respuesta)
 });

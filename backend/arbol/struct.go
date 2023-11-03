@@ -33,7 +33,8 @@ func (a Declaracion_atributo) Ejecutar(ambito_padre *ambito.Ambito) *ambito.Vari
 	if variable.Tipo == valor.NULL {
 		existe, _ := ambito_padre.Buscar_struct(a.Primitivo)
 		if existe == nil {
-			panic("El struct " + a.Primitivo + " no esta definido")
+			ambito_padre.Agregar_error("El struct " + a.Primitivo + " no esta definido")
+			return &variable
 		}
 		variable.Is_instancia = true
 		variable.Tipo_struct = a.Primitivo

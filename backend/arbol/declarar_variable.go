@@ -19,7 +19,8 @@ type Declarar_variable struct {
 func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	result := valor.Value{Type: valor.NULL}
 	if rr, _ := ambito_padre.BuscarVariable(d.Id); rr != nil {
-		panic("Error la variable ya existe: " + d.Id)
+		ambito_padre.Agregar_error("Error la variable ya existe: " + d.Id)
+		return valor.Value{}
 	}
 	variable := ambito.Variables{Id: d.Id, Posicion_relativa: ambito_padre.Size, Tipo_dimension: valor.DIMENSION0}
 	tmp_posicion_variable := generador.Mi_generador.NewTemp()
@@ -30,7 +31,8 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				//buscar el struct
 				estruct, _ := ambito_padre.Buscar_struct(d.Id)
 				if estruct == nil {
-					panic("El struct no esta definido " + d.Id)
+					ambito_padre.Agregar_error("El struct no esta definido " + d.Id)
+					return valor.Value{}
 				}
 				variable.Tipo_struct = d.Tipo
 				variable.Is_instancia = true
@@ -40,13 +42,15 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 			ambito_padre.Size++
 			return result
 		} else {
-			panic("Error falta tipo al declarar variable")
+			ambito_padre.Agregar_error("Error falta tipo al declarar variable")
+			return valor.Value{}
 		}
 	}
 	resultado := d.Expresion.Ejecutar(ambito_padre)
 	if resultado.Type == valor.BOOLEAN {
 		if d.Tipo != "Bool" && d.Tipo != "" {
-			panic("Error tipos no coinciden")
+			ambito_padre.Agregar_error("Error tipos no coinciden")
+			return valor.Value{}
 		}
 		newLabel := generador.Mi_generador.NewLabel()
 		//add labels
@@ -80,12 +84,14 @@ func (d Declarar_variable) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				variable.Is_instancia = true
 				variable.Tipo_struct = result.Tipo_struct
 			} else {
-				panic("Error tipos no coinciden")
+				ambito_padre.Agregar_error("Error tipos no coinciden")
+				return valor.Value{}
 			}
 		} else if Tipo_variable[d.Tipo] == resultado.Type {
 			variable.Tipo = resultado.Type
 		} else {
-			panic("Error el tipo de la expresion y la variable no coinciden")
+			ambito_padre.Agregar_error("Error el tipo de la expresion y la variable no coinciden")
+			return valor.Value{}
 		}
 		generador.Mi_generador.AddExpression(tmp_posicion_variable, "P", strconv.Itoa(variable.Posicion_relativa), "+")
 		generador.Mi_generador.AddSetStack("(int)"+tmp_posicion_variable, resultado.Value)

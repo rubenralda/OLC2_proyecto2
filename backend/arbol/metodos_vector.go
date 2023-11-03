@@ -15,22 +15,27 @@ type Funcion_append struct {
 func (f Funcion_append) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(f.Id)
 	if variable == nil {
-		panic("La variable no existe " + f.Id)
+		ambito_padre.Agregar_error("La variable no existe " + f.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector")
+		ambito_padre.Agregar_error("La variable no es un vector")
+		return valor.Value{}
 	}
 	item := f.Expresion.Ejecutar(ambito_padre)
 	if variable.Is_instancia {
 		if variable.Tipo_struct != item.Tipo_struct {
-			panic("El argumento no es del mismo tipo de la variable " + f.Id)
+			ambito_padre.Agregar_error("El argumento no es del mismo tipo de la variable " + f.Id)
+			return valor.Value{}
 		}
 	} else if variable.Tipo == valor.BOOLEAN {
 		if item.Type != valor.BOOLEAN {
-			panic("El argumento no es del mismo tipo de la variable " + f.Id)
+			ambito_padre.Agregar_error("El argumento no es del mismo tipo de la variable " + f.Id)
+			return valor.Value{}
 		}
 	} else if variable.Tipo != item.Type {
-		panic("El argumento no es del mismo tipo de la variable " + f.Id)
+		ambito_padre.Agregar_error("El argumento no es del mismo tipo de la variable " + f.Id)
+		return valor.Value{}
 	}
 	puntero_variable := generador.Mi_generador.NewTemp()
 	puntero_heap := generador.Mi_generador.NewTemp()
@@ -73,10 +78,12 @@ type Funcion_removeLast struct {
 func (f Funcion_removeLast) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(f.Id)
 	if variable == nil {
-		panic("La variable no existe " + f.Id)
+		ambito_padre.Agregar_error("La variable no existe " + f.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector")
+		ambito_padre.Agregar_error("La variable no es un vector " + f.Id)
+		return valor.Value{}
 	}
 	puntero_variable := generador.Mi_generador.NewTemp()
 	puntero_heap := generador.Mi_generador.NewTemp()
@@ -122,14 +129,17 @@ type Funcion_removeat struct {
 func (f Funcion_removeat) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(f.Id)
 	if variable == nil {
-		panic("La variable no existe " + f.Id)
+		ambito_padre.Agregar_error("La variable no existe " + f.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector")
+		ambito_padre.Agregar_error("La variable no es un vector" + f.Id)
+		return valor.Value{}
 	}
 	indice := f.Expresion.Ejecutar(ambito_padre)
 	if indice.Type != valor.INTEGER {
-		panic("El indice no es entero")
+		ambito_padre.Agregar_error("El indice no es entero " + f.Id)
+		return valor.Value{}
 	}
 	tmp_indice := generador.Mi_generador.NewTemp()
 	generador.Mi_generador.AddAssign(tmp_indice, indice.Value)

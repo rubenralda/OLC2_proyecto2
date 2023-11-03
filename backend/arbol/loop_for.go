@@ -16,7 +16,7 @@ type Loop_for_in struct {
 }
 
 func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia for", Padre: ambito_padre}
+	ambito_local := &ambito.Ambito{NombreAmbito: "Sentencia for", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
 	ambito_local.Is_ciclo = true
 	label_final := generador.Mi_generador.NewLabel()
@@ -27,7 +27,8 @@ func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		inicio := s.Inicio.Ejecutar(ambito_padre)
 		final := s.Final.Ejecutar(ambito_padre)
 		if inicio.Type != valor.INTEGER && final.Type != valor.INTEGER {
-			panic("El rango no es entero")
+			ambito_local.Agregar_error("El rango no es entero")
+			return valor.Value{}
 		}
 		label_error := generador.Mi_generador.NewLabel()
 		generador.Mi_generador.AddIf(inicio.Value, final.Value, ">", label_error) //si es mayor el inicio error
@@ -100,7 +101,8 @@ func (s Loop_for_in) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		} else if resultado.Tipo_dimension == valor.DIMENSION1 {
 			//logica para recorrer un vector
 		} else {
-			panic("Se esperaba un string o vector en la expresion")
+			ambito_local.Agregar_error("Se esperaba un string o vector en la expresion")
+			return valor.Value{}
 		}
 	}
 	return valor.Value{}

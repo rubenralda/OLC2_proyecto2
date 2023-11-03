@@ -14,10 +14,12 @@ type Vector_isempty struct {
 func (a Vector_isempty) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(a.Id)
 	if variable == nil {
-		panic("La variable no existe " + a.Id)
+		ambito_padre.Agregar_error("La variable no existe " + a.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector " + a.Id)
+		ambito_padre.Agregar_error("La variable no es un vector " + a.Id)
+		return valor.Value{}
 	}
 	puntero_variable := generador.Mi_generador.NewTemp()
 	puntero_heap := generador.Mi_generador.NewTemp()
@@ -49,10 +51,12 @@ type Vector_count struct {
 func (a Vector_count) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(a.Id)
 	if variable == nil {
-		panic("La variable no existe " + a.Id)
+		ambito_padre.Agregar_error("La variable no existe " + a.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector " + a.Id)
+		ambito_padre.Agregar_error("La variable no es un vector " + a.Id)
+		return valor.Value{}
 	}
 	puntero_variable := generador.Mi_generador.NewTemp()
 	puntero_heap := generador.Mi_generador.NewTemp()

@@ -56,7 +56,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		resultado2 := e.Valor2.Ejecutar(ambito)
 		tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
 		if tipo_dominante != valor.BOOLEAN {
-			panic("Error los operadores no son boolean &&")
+			ambito.Agregar_error("Error los operadores no son boolean &&")
+			return valor.Value{}
 		}
 		result = valor.Value{Type: valor.BOOLEAN}
 		result.TrueLabel = append(resultado2.TrueLabel, result.TrueLabel...)
@@ -72,7 +73,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 		resultado2 := e.Valor2.Ejecutar(ambito)
 		tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
 		if tipo_dominante != valor.BOOLEAN {
-			panic("Error los operadores no son boolean ||")
+			ambito.Agregar_error("Error los operadores no son boolean ||")
+			return valor.Value{}
 		}
 		result = valor.Value{Type: valor.BOOLEAN}
 		result.TrueLabel = append(resultado1.TrueLabel, result.TrueLabel...)
@@ -87,7 +89,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			result.FalseLabel = append(result.FalseLabel, resultado1.TrueLabel...)
 			return result
 		} else {
-			panic("No se puede hacer la operacion (!)")
+			ambito.Agregar_error("No se puede hacer la operacion (!)")
+			return valor.Value{}
 		}
 	} else if e.Operacion == "negacion" {
 		resultado1 := e.Valor1.Ejecutar(ambito)
@@ -97,7 +100,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			result = valor.Value{Value: newTemp, Type: resultado1.Type}
 			return result
 		} else {
-			panic("No se puede negar la operacion")
+			ambito.Agregar_error("No se puede negar la operacion")
+			return valor.Value{}
 		}
 	} else { //todas las aritmeticas
 		resultado1 := e.Valor1.Ejecutar(ambito)
@@ -165,7 +169,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
-				panic("Error tipo no valido")
+				ambito.Agregar_error("Error tipo no valido")
+				return valor.Value{}
 			}
 		case "-":
 			newTemp := generador.Mi_generador.NewTemp()
@@ -180,7 +185,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
-				panic("Error tipo no valido")
+				ambito.Agregar_error("Error tipo no valido")
+				return valor.Value{}
 			}
 		case "*":
 			newTemp := generador.Mi_generador.NewTemp()
@@ -195,7 +201,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
-				panic("Error tipo no valido")
+				ambito.Agregar_error("Error tipo no valido")
+				return valor.Value{}
 			}
 		case "/":
 			newTemp := generador.Mi_generador.NewTemp()
@@ -242,7 +249,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
-				panic("Error tipo no valido")
+				ambito.Agregar_error("Error tipo no valido")
+				return valor.Value{}
 			}
 		case "%":
 			newTemp := generador.Mi_generador.NewTemp()
@@ -253,7 +261,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result = valor.Value{Value: newTemp, Type: tipo_dominante}
 				return result
 			} else { // nil
-				panic("Error tipo no valido")
+				ambito.Agregar_error("Error tipo no valido")
+				return valor.Value{}
 			}
 		case ">":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -269,7 +278,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante == valor.STRING {
 				return operacion_comparacion(">", resultado1, resultado2)
 			} else {
-				panic("Error no se puede comparar >")
+				ambito.Agregar_error("Error no se puede comparar >")
+				return valor.Value{}
 			}
 		case "<":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -285,7 +295,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante == valor.STRING {
 				return operacion_comparacion("<", resultado1, resultado2)
 			} else {
-				panic("Error no se puede comparar <")
+				ambito.Agregar_error("Error no se puede comparar <")
+				return valor.Value{}
 			}
 		case ">=":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -301,7 +312,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante == valor.STRING {
 				return operacion_comparacion(">=", resultado1, resultado2)
 			} else {
-				panic("Error no se puede comparar >=")
+				ambito.Agregar_error("Error no se puede comparar >=")
+				return valor.Value{}
 			}
 		case "<=":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -317,7 +329,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 			} else if tipo_dominante == valor.STRING {
 				return operacion_comparacion("<=", resultado1, resultado2)
 			} else {
-				panic("Error no se puede comparar <=")
+				ambito.Agregar_error("Error no se puede comparar <=")
+				return valor.Value{}
 			}
 		case "==":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -333,7 +346,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
 			} else {
-				panic("Error no se puede comparar ==")
+				ambito.Agregar_error("Error no se puede comparar ==")
+				return valor.Value{}
 			}
 		case "!=":
 			tipo_dominante := tipo_op_relaciones[resultado1.Type][resultado2.Type]
@@ -349,7 +363,8 @@ func (e Expresion) Ejecutar(ambito *ambito.Ambito) valor.Value {
 				result.FalseLabel = append(result.FalseLabel, falseLabel)
 				return result
 			} else {
-				panic("Error no se puede comparar !=")
+				ambito.Agregar_error("Error no se puede comparar !=")
+				return valor.Value{}
 			}
 		default:
 			return result

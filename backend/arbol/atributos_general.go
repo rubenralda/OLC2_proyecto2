@@ -21,7 +21,8 @@ type Atributo_general struct {
 func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(a.ID_inicial.ID)
 	if variable == nil {
-		panic("La variable no existe " + a.ID_inicial.ID)
+		ambito_padre.Agregar_error("La variable no existe " + a.ID_inicial.ID)
+		return valor.Value{}
 	}
 	if variable.Is_instancia { //vive en el stack
 		var resultado valor.Value
@@ -39,15 +40,18 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddGetStack(puntero_heap, "(int)"+posicion_struct)
 		if a.ID_inicial.Vector { //el id es vector: id[i](.atributo)* si no es, puntero_heap queda igual
 			if variable.Tipo_dimension != valor.DIMENSION1 {
-				panic("El id no es un vector" + a.ID_inicial.ID)
+				ambito_padre.Agregar_error("El id no es un vector" + a.ID_inicial.ID)
+				return valor.Value{}
 			}
 			if !variable.Is_instancia {
-				panic("El vector no es una instancia")
+				ambito_padre.Agregar_error("El vector no es una instancia")
+				return valor.Value{}
 			}
 			//codigo para acceder a la posicion
 			indice := a.ID_inicial.Indice.Ejecutar(ambito_padre)
 			if indice.Type != valor.INTEGER {
-				panic("El indice no es entero")
+				ambito_padre.Agregar_error("El indice no es entero" + a.ID_inicial.ID)
+				return valor.Value{}
 			}
 			tmp_indice := generador.Mi_generador.NewTemp()
 			generador.Mi_generador.AddAssign(tmp_indice, indice.Value)
@@ -81,11 +85,13 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		for indice, atributo_buscar := range a.Lista_atributos { //viene uno si o si
 			atributo, posicion := estruct.Buscar_atributo(atributo_buscar.ID)
 			if atributo == nil {
-				panic("El atributo no existe al struct " + estruct.Nombre)
+				ambito_padre.Agregar_error("El atributo no existe al struct " + estruct.Nombre)
+				return valor.Value{}
 			}
 			if atributo_buscar.Vector { //el id es vector: id.atributo[i](.atributo)*
 				if atributo.Tipo_dimension != valor.DIMENSION1 {
-					panic("El id no es un vector" + atributo_buscar.ID)
+					ambito_padre.Agregar_error("El id no es un vector" + atributo_buscar.ID)
+					return valor.Value{}
 				}
 				//codigo para acceder a la posicion
 			}
@@ -104,7 +110,8 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 				resultado.TrueLabel = append(resultado.TrueLabel, true_label)
 				resultado.FalseLabel = append(resultado.FalseLabel, false_label)
 				if indice < len(a.Lista_atributos)-1 { //si no es el ultimo error
-					panic("La variable " + atributo.Id + " no tiene atributos")
+					ambito_padre.Agregar_error("La variable " + atributo.Id + " no tiene atributos")
+					return valor.Value{}
 				}
 			} else {
 				resultado = valor.Value{Value: valor_heap, Type: atributo.Tipo}
@@ -112,6 +119,7 @@ func (a Atributo_general) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		}
 		return resultado
 	} else {
-		panic("Error no tiene atributos " + variable.Id)
+		ambito_padre.Agregar_error("Error no tiene atributos " + variable.Id)
+		return valor.Value{}
 	}
 }

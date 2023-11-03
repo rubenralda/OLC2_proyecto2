@@ -13,7 +13,7 @@ type Loop_while struct {
 }
 
 func (s Loop_while) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia while", Padre: ambito_padre}
+	ambito_local := &ambito.Ambito{NombreAmbito: "Sentencia while", Padre: ambito_padre}
 	ambito_local.Is_ciclo = true
 	ambito_padre.AgregarAmbito(ambito_local)
 	//crear la etiqueta de inicio
@@ -26,7 +26,8 @@ func (s Loop_while) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	//agregar la primera etiqueta de false para break
 	ambito_local.BreakLabel = resultado.FalseLabel[0].(string)
 	if resultado.Type != valor.BOOLEAN {
-		panic("Error la expresion no es un bool que espera el while")
+		ambito_local.Agregar_error("Error la expresion no es un bool que espera el while")
+		return valor.Value{}
 	}
 	//true labels
 	for _, lvl := range resultado.TrueLabel {

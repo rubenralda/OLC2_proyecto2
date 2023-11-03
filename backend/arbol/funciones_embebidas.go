@@ -106,7 +106,8 @@ func (f Funcion_int) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	} else if resultado.Type == valor.STRING {
 		generador.Mi_generador.AddCall("funcion_int_string_rubencin")
 	} else {
-		panic("Error se esperaba una expresion float o strig funcion Int")
+		ambito_padre.Agregar_error("Error se esperaba una expresion float o strig funcion Int")
+		return valor.Value{}
 	}
 	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
 	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
@@ -139,7 +140,8 @@ func (f Funcion_float) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	if resultado.Type == valor.STRING {
 		generador.Mi_generador.AddCall("funcion_float_rubencin")
 	} else {
-		panic("Error se esperaba una expresion strig funcion Float")
+		ambito_padre.Agregar_error("Error se esperaba una expresion strig funcion Float")
+		return valor.Value{}
 	}
 	generador.Mi_generador.AddGetStack(newTemp2, "(int)P")    //obtencion retorno
 	generador.Mi_generador.AddExpression("P", "P", size, "-") //regreso del entorno
@@ -214,7 +216,8 @@ func (f Funcion_string) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		generador.Mi_generador.AddLabel(newLabel)
 		return valor.Value{Value: tmp_string, Type: valor.STRING}
 	} else {
-		panic("Error se esperaba una expresion strig funcion Float")
+		ambito_padre.Agregar_error("Error se esperaba una expresion strig funcion Float")
+		return valor.Value{}
 	}
 
 }

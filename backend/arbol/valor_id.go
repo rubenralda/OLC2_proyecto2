@@ -16,10 +16,12 @@ func (a Id_expresion) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	var result valor.Value
 	id_buscado, size_total := ambito_padre.BuscarVariable(a.Id)
 	if id_buscado == nil {
-		panic("La variable no existe " + a.Id)
+		ambito_padre.Agregar_error("La variable no existe " + a.Id)
+		return valor.Value{}
 	}
 	if !id_buscado.Is_init {
-		panic("La variable no se ha inicializado")
+		ambito_padre.Agregar_error("La variable no se ha inicializado")
+		return valor.Value{}
 	}
 	tmp_posicion := generador.Mi_generador.NewTemp()
 	temp2 := generador.Mi_generador.NewTemp()
@@ -71,14 +73,17 @@ type Id_vector struct {
 func (a Id_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(a.Id)
 	if variable == nil {
-		panic("La variable no existe " + a.Id)
+		ambito_padre.Agregar_error("La variable no existe " + a.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSION1 {
-		panic("La variable no es un vector " + a.Id)
+		ambito_padre.Agregar_error("La variable no es un vector " + a.Id)
+		return valor.Value{}
 	}
 	indice := a.Indice.Ejecutar(ambito_padre)
 	if indice.Type != valor.INTEGER {
-		panic("El indice no es entero")
+		ambito_padre.Agregar_error("El indice no es entero " + a.Id)
+		return valor.Value{}
 	}
 	tmp_indice := generador.Mi_generador.NewTemp()
 	generador.Mi_generador.AddAssign(tmp_indice, indice.Value)
@@ -139,10 +144,12 @@ type Id_matriz struct {
 func (a Id_matriz) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	variable, size := ambito_padre.BuscarVariable(a.Id)
 	if variable == nil {
-		panic("La variable no existe " + a.Id)
+		ambito_padre.Agregar_error("La variable no existe " + a.Id)
+		return valor.Value{}
 	}
 	if variable.Tipo_dimension != valor.DIMENSIONN {
-		panic("La variable no es una matriz " + a.Id)
+		ambito_padre.Agregar_error("La variable no es una matriz " + a.Id)
+		return valor.Value{}
 	}
 	copia_dimen := make([]int, len(variable.Len_dimension))
 	copy(copia_dimen, variable.Len_dimension)
@@ -158,7 +165,8 @@ func (a Id_matriz) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		}
 		resultado := indice.Ejecutar(ambito_padre)
 		if resultado.Type != valor.INTEGER {
-			panic("El indice no es tipo int")
+			ambito_padre.Agregar_error("El indice no es tipo int " + a.Id)
+			return valor.Value{}
 		}
 		generador.Mi_generador.AddIf(resultado.Value, strconv.Itoa(variable.Len_dimension[i]), ">=", label_error)
 		generador.Mi_generador.AddExpression(aux, resultado.Value, strconv.Itoa(len_fila), "*")

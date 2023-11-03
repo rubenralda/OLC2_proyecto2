@@ -17,7 +17,8 @@ type Declarar_vector struct {
 func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	existe, _ := ambito_padre.BuscarVariable(d.ID)
 	if existe != nil {
-		panic("La variable ya existe")
+		ambito_padre.Agregar_error("La variable ya existe " + d.ID)
+		return valor.Value{}
 	}
 	variable := ambito.Variables{Id: d.ID, Tipo_dimension: valor.DIMENSION1, Posicion_relativa: ambito_padre.Size}
 	variable.Tipo = Tipo_variable[d.Tipo]
@@ -25,7 +26,8 @@ func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		//es un array de objetos validar por d.Tipo
 		estruct, _ := ambito_padre.Buscar_struct(d.Tipo)
 		if estruct == nil {
-			panic("El struct no esta definido " + d.Tipo)
+			ambito_padre.Agregar_error("El struct no esta definido " + d.Tipo)
+			return valor.Value{}
 		}
 		variable.Is_instancia = true
 		variable.Tipo_struct = d.Tipo
@@ -47,15 +49,18 @@ func (d Declarar_vector) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 		resultado := item.Ejecutar(ambito_padre)
 		if variable.Is_instancia {
 			if variable.Tipo_struct != resultado.Tipo_struct {
-				panic("El item no es del tipo del array " + variable.Id)
+				ambito_padre.Agregar_error("El item no es del tipo del array " + variable.Id)
+				return valor.Value{}
 			}
 		} else if variable.Tipo == valor.BOOLEAN {
 			if resultado.Type != valor.BOOLEAN {
-				panic("El item no es del tipo del array " + variable.Id)
+				ambito_padre.Agregar_error("El item no es del tipo del array " + variable.Id)
+				return valor.Value{}
 			}
 			// imprimir etiquetas y en un temporal guardar 0 o 1 para darle setHeap ese valor
 		} else if variable.Tipo != resultado.Type {
-			panic("El item no es del tipo del array " + variable.Id)
+			ambito_padre.Agregar_error("El item no es del tipo del array " + variable.Id)
+			return valor.Value{}
 		}
 		//falta el array de bool, que usa etiquetas true y false
 		generador.Mi_generador.AddComment("metiendovalor")

@@ -29,21 +29,22 @@ type Declarar_matriz struct {
 func (d Declarar_matriz) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	tipo := Tipo_variable[d.Tipo_matriz_ex.Primitivo]
 	posicion_matriz := generador.Mi_generador.NewTemp()
-	generador.Mi_generador.AddComment("matriz")
 	generador.Mi_generador.AddAssign(posicion_matriz, "H")
 	tamano := 0
 	variable := ambito.Variables{Id: d.Id, Posicion_relativa: ambito_padre.Size, Tipo_dimension: valor.DIMENSIONN, Tipo: tipo}
 	if d.Tipo_matriz_ex.Dimension != 0 {
 		tamano, variable.Len_dimension = comprobar_dimensiones(d.Matriz, ambito_padre, &tipo)
 		if d.Tipo_matriz_ex.Dimension != tamano {
-			panic("La definicion de dimensiones no concuerda " + d.Id)
+			ambito_padre.Agregar_error("La definicion de dimensiones no concuerda " + d.Id)
+			return valor.Value{}
 		}
 	} else {
 		tamano, variable.Len_dimension = comprobar_dimensiones(d.Matriz, ambito_padre, &tipo)
 		d.Tipo_matriz_ex.Dimension = tamano
 	}
 	if d.Tipo_matriz_ex.Dimension < 2 {
-		panic("La definicion no es una matriz")
+		ambito_padre.Agregar_error("La definicion no es una matriz " + d.Id)
+		return valor.Value{}
 	}
 	ambito_padre.AgregarVariable(variable)
 	ambito_padre.Size++
@@ -71,20 +72,20 @@ func comprobar_dimensiones(vector []interface{}, ambito_padre *ambito.Ambito, pr
 			if i == 0 { //si es el primer elemento determina la profundidad de sus hermanos
 				dimension = dim_hijo
 			} else if dimension != dim_hijo {
-				panic("No todas las dimensiones tienen la misma profundidad")
+				ambito_padre.Agregar_error("No todas las dimensiones tienen la misma profundidad")
 			}
 		default:
 			if i == 0 {
 				dimension = 1
 			} else if dimension != 1 {
-				panic("No todas las dimensiones tienen la misma profundidad")
+				ambito_padre.Agregar_error("No todas las dimensiones tienen la misma profundidad")
 			}
 			resultado := rr.(BaseNodo).Ejecutar(ambito_padre)
 			if *primitivo == valor.NULL {
 				primitivo = &resultado.Type
 			}
 			if resultado.Type != *primitivo {
-				panic("Error el valor no coincide con el tipo de la matriz")
+				ambito_padre.Agregar_error("No todas las dimensiones tienen la misma profundidad")
 			}
 			generador.Mi_generador.AddSetHeap("(int)H", resultado.Value)
 			generador.Mi_generador.AddExpression("H", "H", "1", "+")

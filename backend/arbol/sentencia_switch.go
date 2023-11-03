@@ -13,11 +13,12 @@ type Sentencia_switch struct {
 }
 
 func (s Sentencia_switch) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
-	ambito_local := &ambito.Ambito{NombreAmbito: "sentencia switch", Padre: ambito_padre}
+	ambito_local := &ambito.Ambito{NombreAmbito: "Sentencia switch", Padre: ambito_padre}
 	ambito_padre.AgregarAmbito(ambito_local)
 	resultado := s.Expresion.Ejecutar(ambito_padre)
 	if resultado.Tipo_dimension != valor.DIMENSION0 || resultado.Is_intancia || resultado.Type == valor.BOOLEAN {
-		panic("No se puede evaluar los casos del case")
+		ambito_local.Agregar_error("No se puede evaluar los casos del case")
+		return valor.Value{}
 	}
 	// quiza guardar en el stack el resultado a evaluar en el case para perder el valor porque
 	// probablemente sea un temporal
@@ -44,7 +45,8 @@ func (s Sentencia_switch) Ejecutar(ambito_padre *ambito.Ambito) valor.Value {
 	for i, sentencia_case := range s.Lista_case {
 		resultado_case := sentencia_case.Expresion.Ejecutar(ambito_local)
 		if resultado_case.Type != resultado.Type {
-			panic("El tipo de la expresion del case no coincide")
+			ambito_local.Agregar_error("El tipo de la expresion del case no coincide")
+			return valor.Value{}
 		}
 		if resultado.Type == valor.STRING {
 			// comparar dos string de nuevo xd

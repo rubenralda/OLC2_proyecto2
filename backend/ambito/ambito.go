@@ -86,6 +86,12 @@ func (a *Ambito) AgregarAmbito(ambito *Ambito) bool {
 	return true
 }
 
+var Errores []string
+
+func (a *Ambito) Agregar_error(mensaje string) {
+	Errores = append(Errores, mensaje)
+}
+
 func (a *Ambito) BuscarVariable(id string) (*Variables, int) {
 	anterior := a
 	var elemento *Variables
@@ -285,5 +291,21 @@ func Generar_reporte_tabla_simbolos_hijos(ambito *Ambito) string {
 	for _, hijos := range ambito.AmbitosHijos {
 		reporte += Generar_reporte_tabla_simbolos_hijos(hijos)
 	}
+	return reporte
+}
+
+func Generar_reporte_erroes() string {
+	reporte := `<table class="table table-bordered table-dark">
+	<tr>
+		<th scope="col">No.</th>
+		<th scope="col">MENSAJE</th>
+	</tr>`
+	for i, err := range Errores {
+		reporte += "<tr>"
+		reporte += "<th>" + strconv.Itoa(i+1) + "</th>"
+		reporte += "<th>" + err + "</th>"
+		reporte += "</tr>\n"
+	}
+	reporte += "</table>"
 	return reporte
 }
